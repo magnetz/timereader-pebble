@@ -122,19 +122,26 @@ int store_queue_count(void) {
   return persist_exists(STORE_KEY_QUEUE_COUNT) ? persist_read_int(STORE_KEY_QUEUE_COUNT) : 0;
 }
 
-int store_queue_load(QueuedSession *out, int max) {
+static bool queue_read_at(int i, QueuedSession *out) {
+  int key = store_core_queue_key(i);
+  if (key < 0 || !persist_exists(key)) return false;
+  unsigned char buf[STORE_CORE_SESSION_BYTES + 8];
+  int len = persist_read_data(key, buf, sizeof(buf));
+  return len >= STORE_CORE_SESSION_BYTES && store_core_unpack_session(buf, len, out);
+}
+
+bool store_queue_head(QueuedSession *out) {
+  if (store_queue_count() <= 0) return false;
+  return queue_read_at(0, out);
+}
+
+bool store_queue_contains(const char *id) {
   int n = store_queue_count();
-  if (n > max) n = max;
-  if (n > STORE_MAX_QUEUE) n = STORE_MAX_QUEUE;
-  int got = 0;
+  QueuedSession s;
   for (int i = 0; i < n; i++) {
-    int key = store_core_queue_key(i);
-    if (key < 0 || !persist_exists(key)) continue;
-    unsigned char buf[STORE_CORE_SESSION_BYTES + 8];
-    int len = persist_read_data(key, buf, sizeof(buf));
-    if (len >= STORE_CORE_SESSION_BYTES && store_core_unpack_session(buf, len, &out[got])) got++;
+    if (queue_read_at(i, &s) && strcmp(s.id, id) == 0) return true;
   }
-  return got;
+  return false;
 }
 
 bool store_queue_push(const QueuedSession *s) {
@@ -149,17 +156,24 @@ bool store_queue_push(const QueuedSession *s) {
 }
 
 void store_queue_remove(const char *id) {
-  QueuedSession q[STORE_MAX_QUEUE];
-  int n = store_queue_load(q, STORE_MAX_QUEUE);
-  int idx = -1;
+  /* static, not stack: STORE_MAX_QUEUE * sizeof(QueuedSession) is 2 KB,
+     which would blow the small Pebble app stack. */
+  static QueuedSession s_scratch[STORE_MAX_QUEUE];
+  int n = store_queue_count();
+  if (n > STORE_MAX_QUEUE) n = STORE_MAX_QUEUE;
+  int got = 0;
   for (int i = 0; i < n; i++) {
-    if (strcmp(q[i].id, id) == 0) { idx = i; break; }
+    if (queue_read_at(i, &s_scratch[got])) got++;
+  }
+  int idx = -1;
+  for (int i = 0; i < got; i++) {
+    if (strcmp(s_scratch[i].id, id) == 0) { idx = i; break; }
   }
   if (idx < 0) return;
-  int rest = store_core_queue_drop(q, n, idx);
+  int rest = store_core_queue_drop(s_scratch, got, idx);
   for (int i = 0; i < rest; i++) {
     unsigned char buf[STORE_CORE_SESSION_BYTES + 8];
-    int len = store_core_pack_session(&q[i], buf, sizeof(buf));
+    int len = store_core_pack_session(&s_scratch[i], buf, sizeof(buf));
     persist_write_data(store_core_queue_key(i), buf, len);
   }
   if (persist_exists(store_core_queue_key(rest))) persist_delete(store_core_queue_key(rest));

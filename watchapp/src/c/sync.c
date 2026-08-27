@@ -17,13 +17,14 @@ static void st_shadow_begin(void *c, int n) { (void)c; store_shadow_begin(n); }
 static void st_shadow_put(void *c, int i, const DigestBook *b) { (void)c; store_shadow_put(i, b); }
 static void st_shadow_commit(void *c) { (void)c; store_shadow_commit(); }
 static void st_shadow_discard(void *c) { (void)c; store_shadow_discard(); }
-static int  st_queue_load(void *c, QueuedSession *o, int m) { (void)c; return store_queue_load(o, m); }
+static bool st_queue_head(void *c, QueuedSession *o) { (void)c; return store_queue_head(o); }
+static bool st_queue_contains(void *c, const char *id) { (void)c; return store_queue_contains(id); }
 static bool st_queue_push(void *c, const QueuedSession *s) { (void)c; return store_queue_push(s); }
 static void st_queue_remove(void *c, const char *id) { (void)c; store_queue_remove(id); }
 
 static const SyncStore STORE_VT = {
   st_shadow_begin, st_shadow_put, st_shadow_commit, st_shadow_discard,
-  st_queue_load, st_queue_push, st_queue_remove,
+  st_queue_head, st_queue_contains, st_queue_push, st_queue_remove,
 };
 
 /* --- SyncTransport over app_message --- */

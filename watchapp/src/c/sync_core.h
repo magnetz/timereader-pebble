@@ -13,7 +13,8 @@ typedef struct {
   void (*shadow_put)(void *ctx, int idx, const DigestBook *b);
   void (*shadow_commit)(void *ctx);
   void (*shadow_discard)(void *ctx);
-  int  (*queue_load)(void *ctx, QueuedSession *out, int max);
+  bool (*queue_head)(void *ctx, QueuedSession *out);   /* false if the queue is empty */
+  bool (*queue_contains)(void *ctx, const char *id);
   bool (*queue_push)(void *ctx, const QueuedSession *s);
   void (*queue_remove)(void *ctx, const char *id);
 } SyncStore;

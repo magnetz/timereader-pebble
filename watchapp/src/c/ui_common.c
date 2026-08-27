@@ -8,8 +8,15 @@
 #include "ui_summary.h"
 #include "ui_endmenu.h"
 #include "ui_digit.h"
+#include "sync.h"
+#include "digit_entry.h"
+#include <string.h>
 
 SmContext g_ctx;
+
+/* id of the session most recently enqueued — the only one the Summary
+   screen can retract. */
+static char s_last_saved_session_id[16];
 
 const DigestBook *ui_books(int *count) {
   return seed_books(count);
@@ -172,9 +179,26 @@ void ui_dispatch(Event ev) {
       store_save_session(g_ctx.state, g_ctx.start_page_for_session,
                          live_session_elapsed(&g_ctx.live, now));
       break;
-    case FX_SAVE_SESSION:
-    case FX_DISCARD_SESSION:
+    case FX_SAVE_SESSION: {
+      QueuedSession qs;
+      memset(&qs, 0, sizeof(qs));
+      snprintf(qs.id, sizeof(qs.id), "w%d", store_next_session_seq());
+      if (g_ctx.book_index >= 0 && g_ctx.book_index < n) {
+        strncpy(qs.book_id, b[g_ctx.book_index].id, sizeof(qs.book_id) - 1);
+      }
+      qs.start_page = g_ctx.start_page_for_session;
+      qs.end_page = digit_entry_value(&g_ctx.entry);
+      qs.duration_seconds = g_ctx.last_session_seconds;
+      strncpy(s_last_saved_session_id, qs.id, sizeof(s_last_saved_session_id) - 1);
+      sync_enqueue_session(&qs);
+      store_clear_session();
+      break;
+    }
     case FX_RETRACT_SESSION:
+      sync_retract_session(s_last_saved_session_id);
+      store_clear_session();
+      break;
+    case FX_DISCARD_SESSION:
       store_clear_session();
       break;
     case FX_PAGE_ERROR:

@@ -53,11 +53,18 @@ static void fe_shadow_discard(void *ctx) {
   e->shadow_count = 0;
   e->shadow_expected = 0;
 }
-static int fe_queue_load(void *ctx, QueuedSession *out, int max) {
+static bool fe_queue_head(void *ctx, QueuedSession *out) {
   FakeEnv *e = ctx;
-  int n = e->queue_count < max ? e->queue_count : max;
-  for (int i = 0; i < n; i++) out[i] = e->queue[i];
-  return n;
+  if (e->queue_count <= 0) return false;
+  *out = e->queue[0];
+  return true;
+}
+static bool fe_queue_contains(void *ctx, const char *id) {
+  FakeEnv *e = ctx;
+  for (int i = 0; i < e->queue_count; i++) {
+    if (strcmp(e->queue[i].id, id) == 0) return true;
+  }
+  return false;
 }
 static bool fe_queue_push(void *ctx, const QueuedSession *s) {
   FakeEnv *e = ctx;
@@ -93,7 +100,7 @@ static bool fe_send_retract(void *ctx, const char *id) {
 
 static const SyncStore FE_STORE = {
   fe_shadow_begin, fe_shadow_put, fe_shadow_commit, fe_shadow_discard,
-  fe_queue_load, fe_queue_push, fe_queue_remove,
+  fe_queue_head, fe_queue_contains, fe_queue_push, fe_queue_remove,
 };
 static const SyncTransport FE_TX = { fe_send_session, fe_send_retract };
 

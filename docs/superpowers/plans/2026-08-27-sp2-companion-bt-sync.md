@@ -1807,7 +1807,7 @@ git commit -m "feat: pkjs snapshot sender and inbound session/retract handlers"
   void seed_reload(void);   /* re-read the cache after a snapshot commit */
   ```
 
-- [ ] **Step 1: Rewrite `seed.c`**
+- [x] **Step 1: Rewrite `seed.c`**
 
 ```c
 #include "seed.h"
@@ -1827,7 +1827,7 @@ const DigestBook *seed_books(int *count_out) {
 ```
 Delete the hard-coded book array. (The long-title / estimate cases from SP1 now come from real data entered in the config page.)
 
-- [ ] **Step 2: Feed the queue on save / retract** — in `ui_common.c` `ui_dispatch`:
+- [x] **Step 2: Feed the queue on save / retract** — in `ui_common.c` `ui_dispatch`:
 
 ```c
     case FX_SAVE_SESSION: {
@@ -1856,7 +1856,7 @@ Delete the hard-coded book array. (The long-title / estimate cases from SP1 now 
 ```
 Add `char g_last_saved_session_id[16];` to `ui_common.c` (module-level) — SP1's retract only needs the id of the session it just enqueued. `#include "sync.h"`, `"store.h"`, `"digit_entry.h"` in `ui_common.c`.
 
-- [ ] **Step 3: Init sync and refresh on snapshot commit** — in `main.c`:
+- [x] **Step 3: Init sync and refresh on snapshot commit** — in `main.c`:
 
 ```c
 static void on_books_changed(void) {
@@ -1889,9 +1889,9 @@ static void init(void) {
 }
 ```
 
-- [ ] **Step 4: Build + emulator smoke** — `cd watchapp && pebble build && pebble install --emulator basalt && pebble logs`. Expected: with an empty cache the watch shows "Nessun libro" (`APP_NO_BOOKS`); no crash.
+- [x] **Step 4: Build + emulator smoke** — `cd watchapp && pebble build && pebble install --emulator basalt && pebble logs`. Expected: with an empty cache the watch shows "Nessun libro" (`APP_NO_BOOKS`); no crash.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/seed.* watchapp/src/c/ui_common.c watchapp/src/c/main.c

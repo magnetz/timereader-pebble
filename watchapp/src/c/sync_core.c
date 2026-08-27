@@ -49,12 +49,11 @@ void sync_core_snapshot_abort(SyncCore *c) {
 
 void sync_core_drain(SyncCore *c) {
   if (c->awaiting_ack || c->snapshot_active) return;
-  QueuedSession q[STORE_MAX_QUEUE];
-  int n = c->store->queue_load(c->store_ctx, q, STORE_MAX_QUEUE);
-  if (n <= 0) return;
-  if (c->tx->send_session(c->tx_ctx, &q[0])) {
+  QueuedSession head;
+  if (!c->store->queue_head(c->store_ctx, &head)) return;
+  if (c->tx->send_session(c->tx_ctx, &head)) {
     c->awaiting_ack = true;
-    copy_id(c->inflight_id, q[0].id);
+    copy_id(c->inflight_id, head.id);
   }
 }
 
@@ -89,13 +88,7 @@ void sync_core_on_retract_ack(SyncCore *c, const char *id) {
 
 void sync_core_retract(SyncCore *c, const char *id) {
   if (!id) return;
-  QueuedSession q[STORE_MAX_QUEUE];
-  int n = c->store->queue_load(c->store_ctx, q, STORE_MAX_QUEUE);
-  bool in_queue = false;
-  for (int i = 0; i < n; i++) {
-    if (strcmp(q[i].id, id) == 0) { in_queue = true; break; }
-  }
-  if (in_queue) {
+  if (c->store->queue_contains(c->store_ctx, id)) {
     c->store->queue_remove(c->store_ctx, id);
     if (strcmp(c->inflight_id, id) == 0) {
       c->awaiting_ack = false;

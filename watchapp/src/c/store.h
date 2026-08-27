@@ -32,7 +32,8 @@ void store_shadow_discard(void);
 
 /* --- SP2: persistent completed-session queue --- */
 int  store_queue_count(void);
-int  store_queue_load(QueuedSession *out, int max);   /* oldest first; returns count */
+bool store_queue_head(QueuedSession *out);            /* false if the queue is empty */
+bool store_queue_contains(const char *id);
 bool store_queue_push(const QueuedSession *s);        /* false if full (STORE_MAX_QUEUE) */
 void store_queue_remove(const char *id);              /* drop the entry with this id, compact */
 int  store_next_session_seq(void);                    /* monotonic counter for unique session ids */
