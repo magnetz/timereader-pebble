@@ -1035,21 +1035,21 @@ git commit -m "feat: reading timer window with action bar and pause state"
 - Consumes: `ui_common.h`.
 - Produces: `void ui_endmenu_open(void);` (opens the `ActionMenu`), `void ui_endmenu_confirm_exit(void);` (second-confirm dialog).
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 Build an `ActionMenuLevel` with three items: "Salva pagina finale", "Esci senza salvare", "Annulla". Each `action_menu_level_add_action` callback sets `g_ctx.end_menu_index` to 0/1/2 and calls `ui_dispatch(EV_SELECT)`.
 For index 1, after `ui_dispatch` sets `g_ctx.end_menu_confirming`, present a confirmation: a small modal `Window` with "Uscire senza salvare?" and an `ActionBarLayer` (check = confirm → `ui_dispatch(EV_SELECT)`; back = `ui_dispatch(EV_BACK)`), or reuse a second `ActionMenu` level. Prefer the modal window for a clear two-step feel.
 `ActionMenu` is dismissed automatically on selection / back; on plain back (no selection) call `ui_dispatch(EV_BACK)` via the `did_close` callback only if still in `APP_END_SESSION_MENU`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_END_SESSION_MENU` with `end_menu_confirming == false` → ensure `ActionMenu` is open; `== true` → the confirm modal.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 From the timer, Back opens the ActionMenu with system styling/animation. "Annulla" and menu-back both return to the timer unchanged. "Salva pagina finale" opens end-page entry prefilled with the start page; Back on its first digit returns to the timer with elapsed intact. "Esci senza salvare" → confirm → returns to book detail; logs show `FX_DISCARD_SESSION` and `store_clear_session` ran.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_endmenu.* watchapp/src/c/ui_common.c

@@ -6,6 +6,7 @@
 #include "ui_digit.h"
 #include "ui_timer.h"
 #include "ui_summary.h"
+#include "ui_endmenu.h"
 
 SmContext g_ctx;
 
@@ -73,6 +74,9 @@ static int desired_stack(Window **out) {
       out[d++] = ui_list_window();
       out[d++] = ui_detail_window();
       out[d++] = ui_timer_window();
+      if (g_ctx.end_menu_confirming) {
+        out[d++] = ui_endmenu_confirm_window();
+      }
       break;
     case APP_ENTER_END_PAGE:
       out[d++] = ui_list_window();
@@ -116,6 +120,8 @@ void ui_route_to_state(void) {
     window_stack_push(want[i], animated);
     s_stack[s_depth++] = want[i];
   }
+
+  ui_endmenu_sync();
 }
 
 void ui_refresh_current(void) {
