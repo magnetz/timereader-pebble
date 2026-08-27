@@ -76,7 +76,7 @@ timereader-pebble/
 **Interfaces:**
 - Produces: a `watchapp/` that `pebble build` compiles and `pebble install --emulator basalt` runs, showing the default "Hello, World" text.
 
-- [ ] **Step 1: Install `uv`**
+- [x] **Step 1: Install `uv`**
 
 Run:
 ```bash
@@ -86,7 +86,7 @@ uv --version
 ```
 Expected: prints a `uv` version. If `curl` is blocked, ask the user to run it in a `!` shell.
 
-- [ ] **Step 2: Install `pebble-tool` + SDK**
+- [x] **Step 2: Install `pebble-tool` + SDK**
 
 Run:
 ```bash
@@ -96,7 +96,7 @@ pebble sdk list
 ```
 Expected: `pebble sdk list` shows an installed SDK marked active. If `pebble sdk install` needs a Rebble login, stop and ask the user to run `pebble login` (or the printed auth command) in a `!` shell, then retry.
 
-- [ ] **Step 3: Scaffold the project**
+- [x] **Step 3: Scaffold the project**
 
 Run:
 ```bash
@@ -105,7 +105,7 @@ pebble new-project --c watchapp
 ```
 Expected: `watchapp/` created with `src/c/watchapp.c`, `package.json`, `wscript`.
 
-- [ ] **Step 4: Pin `package.json` to the spec**
+- [x] **Step 4: Pin `package.json` to the spec**
 
 Set in `watchapp/package.json`:
 ```json
@@ -128,7 +128,7 @@ Set in `watchapp/package.json`:
 }
 ```
 
-- [ ] **Step 5: Rename entry file, build, run**
+- [x] **Step 5: Rename entry file, build, run**
 
 Run:
 ```bash
@@ -139,7 +139,7 @@ pebble install --emulator basalt
 ```
 Expected: `pebble build` ends `Created build/timereader.pbw`; the emulator opens showing the default app text.
 
-- [ ] **Step 6: Extend `.gitignore` and write `README.md`**
+- [x] **Step 6: Extend `.gitignore` and write `README.md`**
 
 Append to `.gitignore`:
 ```
@@ -149,7 +149,7 @@ watchapp/.pebble-cache/
 ```
 Create `README.md` with: one-paragraph project description, the two sub-projects, and a "Dev setup" block containing the Step 1–2 commands plus `cd watchapp && pebble build && pebble install --emulator basalt` and `cd tests/c && ./run.sh`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd /Users/lucamagnetti/app/timereader-pebble
@@ -203,11 +203,11 @@ git commit -m "chore: scaffold basalt watchapp project"
   - `test.h` macros: `CHECK(cond, msg)`, `CHECK_EQ_INT(actual, expected, msg)`, `CHECK_EQ_STR(actual, expected, msg)`, and `TEST_MAIN()` expanding to a `main` that runs every registered `void test_*(void)` and prints `N passed / M failed`, exiting non-zero on any failure.
   - `run.sh`: `cc -std=c11 -Wall -Wextra -I../../watchapp/src/c -o /tmp/tr_tests test_*.c && /tmp/tr_tests`.
 
-- [ ] **Step 1: Write `model.h`**
+- [x] **Step 1: Write `model.h`**
 
 Exactly the types in the Interfaces block above, wrapped in an include guard. No functions.
 
-- [ ] **Step 2: Write `test.h`**
+- [x] **Step 2: Write `test.h`**
 
 A single-header harness. Registration via a static array populated by a `REGISTER_TEST(fn)` macro using a constructor attribute, or simpler: an explicit `RUN(test_fn)` list inside `TEST_MAIN`. Use the explicit-list form:
 ```c
@@ -225,7 +225,7 @@ extern int tests_run, tests_failed;
 #define TEST_END() printf("%d passed / %d failed\n", tests_run - tests_failed, tests_failed); return tests_failed ? 1 : 0; }
 ```
 
-- [ ] **Step 3: Write `run.sh`**
+- [x] **Step 3: Write `run.sh`**
 
 ```bash
 #!/usr/bin/env bash
@@ -236,7 +236,7 @@ cc -std=c11 -Wall -Wextra -I../../watchapp/src/c -o /tmp/tr_tests test_*.c
 ```
 `chmod +x run.sh`.
 
-- [ ] **Step 4: Smoke test the harness**
+- [x] **Step 4: Smoke test the harness**
 
 Create a temporary `tests/c/test_smoke.c`:
 ```c
@@ -248,7 +248,7 @@ TEST_END()
 Run: `./run.sh`
 Expected: `1 passed / 0 failed`, exit 0. Then `rm test_smoke.c`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/model.h tests/c/
@@ -278,7 +278,7 @@ Port of `../m5/timereader/firmware/app/digit_entry.py`. A 4-digit buffer with an
   bool digit_entry_back(DigitEntry *e);                   /* retreat cursor; returns true if cursor was already 0 (caller should cancel) */
   ```
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "digit_entry.h"
@@ -320,12 +320,12 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `cd tests/c && ./run.sh`
 Expected: compile error (`digit_entry.h` missing).
 
-- [ ] **Step 3: Write `digit_entry.h` and `digit_entry.c`**
+- [x] **Step 3: Write `digit_entry.h` and `digit_entry.c`**
 
 Header: include guard, `#include <stdbool.h>`, the struct and six prototypes from Interfaces.
 Implementation:
@@ -358,12 +358,12 @@ bool digit_entry_back(DigitEntry *e) {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/digit_entry.* tests/c/test_digit_entry.c
@@ -403,7 +403,7 @@ Port of `../m5/timereader/firmware/app/session.py` and `completion_estimate.py`.
   int eta_minutes(int pages_left, int pph_x100);                        /* 0 if pph_x100 == 0 */
   ```
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "session.h"
@@ -451,12 +451,12 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./run.sh`
 Expected: compile error (`session.h` missing).
 
-- [ ] **Step 3: Write `session.h` and `session.c`**
+- [x] **Step 3: Write `session.h` and `session.c`**
 
 ```c
 #include "session.h"
@@ -497,12 +497,12 @@ int eta_minutes(int pl, int pph_x100) {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/session.* tests/c/test_session.c
@@ -552,7 +552,7 @@ Port of `../m5/timereader/firmware/app/state_machine.py`, adapted to 4 buttons a
   ```
   `sm_handle` returns the single side effect the caller must perform (persist, save a session row, etc.). When `FX_SAVE_SESSION` / `FX_RETRACT_SESSION` fire, the caller reads `c->entry`, `c->live`, `c->start_page_for_session`, `c->book_index` to build the row.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "state_machine.h"
@@ -706,16 +706,16 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./run.sh`
 Expected: compile error (`state_machine.h` missing).
 
-- [ ] **Step 3: Write `state_machine.h`**
+- [x] **Step 3: Write `state_machine.h`**
 
 Include guard; `#include "model.h"`, `"digit_entry.h"`, `"session.h"`; the `SideEffect` enum, `SmContext` struct, and four prototypes exactly as in Interfaces.
 
-- [ ] **Step 4: Write `state_machine.c` — list + detail**
+- [x] **Step 4: Write `state_machine.c` — list + detail**
 
 Implement `sm_init` (sets `APP_NO_BOOKS` when `book_count == 0`, else `APP_LIST_BOOKS`, `book_index = 0`, `detail_page = 0`), and the `APP_LIST_BOOKS` / `APP_BOOK_DETAIL` branches of `sm_handle`:
 - `APP_LIST_BOOKS`: `EV_UP`/`EV_DOWN` move `book_index` with wrap; `EV_SELECT` → `APP_BOOK_DETAIL`, `detail_page = 0`; `EV_BACK` → no-op (system pops the app).
@@ -724,7 +724,7 @@ Implement `sm_init` (sets `APP_NO_BOOKS` when `book_count == 0`, else `APP_LIST_
 
 Run `./run.sh` — the list/detail/completed-book tests pass, later ones still fail.
 
-- [ ] **Step 5: Write `sm_handle` — digit entry (start + end)**
+- [x] **Step 5: Write `sm_handle` — digit entry (start + end)**
 
 Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, int now)`:
 - `EV_UP` → `digit_entry_up`; `EV_DOWN` → `digit_entry_down`.
@@ -735,7 +735,7 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
   - start: `state = APP_BOOK_DETAIL`.
   - end: `state = c->state_before_end_page` (RUNNING or PAUSED); do **not** touch `c->live`.
 
-- [ ] **Step 6: Write `sm_handle` — running/paused + end-session menu**
+- [x] **Step 6: Write `sm_handle` — running/paused + end-session menu**
 
 - `APP_RUNNING`: `EV_SELECT` → `live_session_pause(&c->live, now)`, `state = APP_PAUSED`, return `FX_PERSIST_STATE`. `EV_BACK` → `state = APP_END_SESSION_MENU`, `end_menu_index = 0`, `end_menu_confirming = false`; record `c->state_before_end_page = APP_RUNNING`.
 - `APP_PAUSED`: `EV_SELECT` → `live_session_resume`, `state = APP_RUNNING`, `FX_PERSIST_STATE`. `EV_BACK` → open menu, `state_before_end_page = APP_PAUSED`.
@@ -746,7 +746,7 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
     - index 1 ("Esci senza salvare"): `end_menu_confirming = true`.
     - index 2 ("Annulla"): `state = c->state_before_end_page`.
 
-- [ ] **Step 7: Write `sm_handle` — summary + `sm_restore`**
+- [x] **Step 7: Write `sm_handle` — summary + `sm_restore`**
 
 - `APP_SESSION_SUMMARY`: `EV_SELECT` or `EV_BACK` → `state = APP_BOOK_DETAIL`, return `FX_NONE`. `EV_UP` or `EV_BACK_LONG` → `live_session_pause(&c->live, now)` is wrong here (elapsed already frozen at save); instead reconstruct: `c->live.accumulated_seconds = c->last_session_seconds; c->live.segment_start = -1;` then `state = APP_PAUSED`, return `FX_RETRACT_SESSION`.
 - `sm_restore`: copy `sm_init` setup, then:
@@ -754,12 +754,12 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
   - `APP_ENTER_END_PAGE` persisted → `state = APP_PAUSED` as well (safest: force an explicit resume), same live reconstruction.
   - anything else → behave like `sm_init`.
 
-- [ ] **Step 8: Run to verify all pass**
+- [x] **Step 8: Run to verify all pass**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add watchapp/src/c/state_machine.* tests/c/test_state_machine.c
