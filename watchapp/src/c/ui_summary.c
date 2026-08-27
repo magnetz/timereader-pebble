@@ -1,5 +1,6 @@
 #include "ui_summary.h"
 #include "ui_common.h"
+#include "strings.h"
 
 static Window *s_window;
 static Layer *s_content;
@@ -12,11 +13,11 @@ static void content_update(Layer *layer, GContext *ctx) {
 
   char line[48];
 
-  graphics_draw_text(ctx, "Sessione salvata", f_label,
+  graphics_draw_text(ctx, S(STR_SESSION_SAVED), f_label,
                      GRect(4, 0, b.size.w - 8, 22),
                      GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 
-  snprintf(line, sizeof(line), "%d pag.", g_ctx.last_session_pages);
+  snprintf(line, sizeof(line), S(STR_PAGES_FMT), g_ctx.last_session_pages);
   graphics_draw_text(ctx, line, f_big, GRect(4, 24, b.size.w - 8, 32),
                      GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 
@@ -29,13 +30,13 @@ static void content_update(Layer *layer, GContext *ctx) {
   snprintf(line, sizeof(line), "%s", dur);
   graphics_draw_text(ctx, line, f_label, GRect(4, 60, b.size.w - 8, 22),
                      GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-  snprintf(line, sizeof(line), "%d.%d pag/ora",
-           pph_x100 / 100, (pph_x100 % 100) / 10);
+  snprintf(line, sizeof(line), S(STR_PPH_FMT),
+           pph_x100 / 100, (pph_x100 % 100) / 10, "");
   graphics_draw_text(ctx, line, f_label, GRect(4, 80, b.size.w - 8, 22),
                      GTextOverflowModeFill, GTextAlignmentCenter, NULL);
 
   graphics_context_set_text_color(ctx, GColorLightGray);
-  graphics_draw_text(ctx, "Su o Indietro-lungo = annulla", f_label,
+  graphics_draw_text(ctx, S(STR_SUMMARY_HINT), f_label,
                      GRect(4, 104, b.size.w - 8, 40),
                      GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }

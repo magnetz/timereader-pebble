@@ -88,7 +88,7 @@ test('addSession rejects end < start with an inline error and no op', () => {
   w.__tr.openSessions('b1');
   w.__tr.addSession('b1', { start_page: 20, end_page: 5, duration_seconds: 60 });
   assert.equal(w.__tr._ops().length, 0);
-  assert.match(w.document.querySelector('#session-error').textContent, /iniziale/i);
+  assert.match(w.document.querySelector('#session-error').textContent, /lower than the start/i);
 });
 
 test('removeSession records a delete and drops it from the list', () => {

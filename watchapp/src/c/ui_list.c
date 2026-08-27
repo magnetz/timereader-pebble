@@ -1,5 +1,6 @@
 #include "ui_list.h"
 #include "ui_common.h"
+#include "strings.h"
 
 static Window *s_window;
 static MenuLayer *s_menu;
@@ -105,7 +106,7 @@ static void nobooks_load(Window *window) {
   GRect b = layer_get_bounds(root);
   ui_setup_status_bar(window);
   s_nobooks_text = text_layer_create(GRect(6, 50, b.size.w - 12, b.size.h - 60));
-  text_layer_set_text(s_nobooks_text, "Nessun libro\naggiungi dal telefono");
+  text_layer_set_text(s_nobooks_text, S(STR_NO_BOOKS));
   text_layer_set_font(s_nobooks_text, fonts_get_system_font(FONT_KEY_GOTHIC_18));
   text_layer_set_text_alignment(s_nobooks_text, GTextAlignmentCenter);
   layer_add_child(root, text_layer_get_layer(s_nobooks_text));

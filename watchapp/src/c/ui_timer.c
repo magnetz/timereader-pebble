@@ -1,5 +1,6 @@
 #include "ui_timer.h"
 #include "ui_common.h"
+#include "strings.h"
 #include "session.h"
 
 static Window *s_window;
@@ -41,7 +42,7 @@ static void content_update(Layer *layer, GContext *ctx) {
 
   if (g_ctx.state == APP_PAUSED) {
     graphics_context_set_text_color(ctx, GColorChromeYellow);
-    graphics_draw_text(ctx, "PAUSA", fonts_get_system_font(FONT_KEY_GOTHIC_18),
+    graphics_draw_text(ctx, S(STR_PAUSE), fonts_get_system_font(FONT_KEY_GOTHIC_18),
                        GRect(0, 96, b.size.w, 24),
                        GTextOverflowModeFill, GTextAlignmentCenter, NULL);
   }

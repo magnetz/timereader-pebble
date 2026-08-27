@@ -1,5 +1,6 @@
 #include "ui_endmenu.h"
 #include "ui_common.h"
+#include "strings.h"
 
 static ActionMenu *s_menu;
 static ActionMenuLevel *s_level;
@@ -33,11 +34,11 @@ static void menu_did_close(ActionMenu *menu, const ActionMenuItem *performed, vo
 static void ensure_level(void) {
   if (s_level) return;
   s_level = action_menu_level_create(3);
-  action_menu_level_add_action(s_level, "Salva pagina finale", item_performed,
+  action_menu_level_add_action(s_level, S(STR_MENU_SAVE), item_performed,
                                (void *)(uintptr_t)0);
-  action_menu_level_add_action(s_level, "Esci senza salvare", item_performed,
+  action_menu_level_add_action(s_level, S(STR_MENU_EXIT), item_performed,
                                (void *)(uintptr_t)1);
-  action_menu_level_add_action(s_level, "Annulla", item_performed,
+  action_menu_level_add_action(s_level, S(STR_MENU_CANCEL), item_performed,
                                (void *)(uintptr_t)2);
 }
 
@@ -74,7 +75,7 @@ static void confirm_load(Window *window) {
   text_layer_set_background_color(s_confirm_text, GColorClear);
   text_layer_set_text_color(s_confirm_text, GColorWhite);
   text_layer_set_font(s_confirm_text, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
-  text_layer_set_text(s_confirm_text, "Uscire senza salvare?");
+  text_layer_set_text(s_confirm_text, S(STR_EXIT_CONFIRM));
   layer_add_child(root, text_layer_get_layer(s_confirm_text));
 
   s_confirm_hint = text_layer_create(GRect(6, b.size.h - 40,
@@ -82,7 +83,7 @@ static void confirm_load(Window *window) {
   text_layer_set_background_color(s_confirm_hint, GColorClear);
   text_layer_set_text_color(s_confirm_hint, GColorLightGray);
   text_layer_set_font(s_confirm_hint, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  text_layer_set_text(s_confirm_hint, "Select: esci\nIndietro: annulla");
+  text_layer_set_text(s_confirm_hint, S(STR_EXIT_HINT));
   layer_add_child(root, text_layer_get_layer(s_confirm_hint));
 
   s_confirm_bar = action_bar_layer_create();

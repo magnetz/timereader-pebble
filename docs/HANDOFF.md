@@ -89,7 +89,7 @@ recorded in `docs/sp2-e2e-notes.md`.
   GitHub Pages deploy is `.github/workflows/pages.yml` (serves `config-page/`).
 
 **Remaining:** Task 16 (distribution.md + README distribution pointer),
-then publish — Rebble store + `.pbw` on GitHub Releases + Pages enablement
+then publish — rePebble store + `.pbw` on GitHub Releases + Pages enablement
 on the `magnetz/timereader-pebble` repo.
 
 ## How to work
