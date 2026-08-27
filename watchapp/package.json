@@ -1,0 +1,21 @@
+{
+  "name": "timereader",
+  "author": "Luca Magnetti",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "TimeReader",
+    "uuid": "bfdd20e5-1c38-4c97-85ee-486042b64b96",
+    "sdkVersion": "3",
+    "targetPlatforms": ["basalt"],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [],
+    "resources": {
+      "media": []
+    }
+  }
+}
