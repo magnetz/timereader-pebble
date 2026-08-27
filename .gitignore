@@ -5,3 +5,4 @@ node_modules/
 watchapp/build/
 watchapp/.pebble-cache/
 .envrc
+watchapp/.lock-waf*
