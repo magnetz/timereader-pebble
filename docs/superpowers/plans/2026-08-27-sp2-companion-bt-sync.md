@@ -309,7 +309,7 @@ Port of `session.py` / `completion_estimate.py` / `storage.py` rules to JS. Pure
   validateSession(s)                     // returns null, or an error string: "end_page < start_page" / "duration_seconds < 0"
   ```
 
-- [ ] **Step 1: Write the failing tests** — `tests/js/test_library.mjs`
+- [x] **Step 1: Write the failing tests** — `tests/js/test_library.mjs`
 
 ```js
 import { test } from 'node:test';
