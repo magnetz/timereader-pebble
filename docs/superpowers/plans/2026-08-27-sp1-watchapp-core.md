@@ -1068,12 +1068,12 @@ git commit -m "feat: end-session ActionMenu with exit-without-saving confirm"
 - Consumes: `ui_common.h`, `session.h`, `store.h`.
 - Produces: `Window *ui_summary_window(void);`, `void ui_summary_refresh(void);`
 
-- [ ] **Step 1: Implement the summary window**
+- [x] **Step 1: Implement the summary window**
 
 `StatusBarLayer` + a layer showing: "Sessione salvata", pages read (`g_ctx.last_session_pages`, big), duration `mm:ss` (`g_ctx.last_session_seconds`), and the recomputed pages/hour for that single session. A hint line: "Su/Indietro tieni = annulla". No timeout — stays until a click.
 `SELECT`/`BACK` → `ui_dispatch(EV_SELECT)` / `ui_dispatch(EV_BACK)`. `UP` → `ui_dispatch(EV_UP)`. Long back → `ui_dispatch(EV_BACK_LONG)` (register with `window_long_click_subscribe`).
 
-- [ ] **Step 2: Complete `ui_dispatch` side-effect handling**
+- [x] **Step 2: Complete `ui_dispatch` side-effect handling**
 
 ```c
 void ui_dispatch(Event ev) {
@@ -1107,16 +1107,16 @@ void ui_dispatch(Event ev) {
 ```
 Also: on every `EV_TICK` while `APP_RUNNING`, re-persist elapsed at most once per 10 s (track `last_persist_s` in `ui_common.c`) so a crash loses ≤10 s — mirrors the original's 10 s cadence.
 
-- [ ] **Step 3: Wire into `ui_route_to_state`**
+- [x] **Step 3: Wire into `ui_route_to_state`**
 
 `APP_SESSION_SUMMARY` → summary window on top (pop timer/digit/menu below it so Back-out is clean; simplest: `window_stack_pop_all(false)` then push list → detail → summary so the natural back-stack is correct).
 
-- [ ] **Step 4: Emulator check**
+- [x] **Step 4: Emulator check**
 
 Full happy path: list → detail → start page → timer (count a few seconds) → Back → "Salva pagina finale" → end page 60 → summary shows pages/duration. Press Up on the summary → logs `FX_RETRACT_SESSION`, lands on the paused timer with the same elapsed. Press Select instead → returns to book detail.
 Recovery: while `APP_RUNNING`, `pebble emu-app-config`? no — kill and relaunch: `pebble install --emulator basalt` again mid-session; app reopens on the **paused** timer at roughly the last-persisted elapsed, and the time does not tick until Select.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/ui_summary.* watchapp/src/c/ui_common.c

@@ -7,6 +7,7 @@
 #include "ui_timer.h"
 #include "ui_summary.h"
 #include "ui_endmenu.h"
+#include "ui_digit.h"
 
 SmContext g_ctx;
 
@@ -166,8 +167,21 @@ void ui_dispatch(Event ev) {
       store_clear_session();
       break;
     case FX_PAGE_ERROR:
+      ui_digit_flash_error();
+      break;
     case FX_NONE:
       break;
+  }
+
+  /* Re-persist elapsed at most every 10s while running, so a crash loses
+     no more than 10s (matches the original app's cadence). */
+  if (ev == EV_TICK && g_ctx.state == APP_RUNNING) {
+    static int s_last_persist;
+    if (now - s_last_persist >= 10) {
+      s_last_persist = now;
+      store_save_session(APP_RUNNING, g_ctx.start_page_for_session,
+                         live_session_elapsed(&g_ctx.live, now));
+    }
   }
 
   ui_route_to_state();
