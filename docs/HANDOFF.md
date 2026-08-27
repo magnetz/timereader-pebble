@@ -82,6 +82,9 @@ recorded in `docs/sp2-e2e-notes.md`.
   uses a `static` scratch buffer; `sync_core` only ever peeks the head.
 - `enableMultiJS: true` in `package.json` is required for
   `require('./library')` in pkjs.
+- `"capabilities": ["configurable"]` in `package.json` is required for the
+  phone app to show the settings gear — a `showConfiguration` listener
+  alone is not enough. Added in 1.0.1.
 - `CONFIG_BASE_URL` in `index.js` is `https://magnetz.github.io/timereader-pebble/`;
   GitHub Pages deploy is `.github/workflows/pages.yml` (serves `config-page/`).
 
