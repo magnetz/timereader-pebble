@@ -1100,7 +1100,7 @@ Watch-side persistence for the digested book records. One record per numbered pe
   void store_shadow_discard(void);
   ```
 
-- [ ] **Step 1: Write the failing tests** — `tests/c/test_store_core.c`
+- [x] **Step 1: Write the failing tests** — `tests/c/test_store_core.c`
 
 ```c
 #include "store_core.h"
@@ -1162,7 +1162,7 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Extend `tests/c/run.sh`**
+- [x] **Step 2: Extend `tests/c/run.sh`**
 
 In the impl loop, add `store_core sync_core` to the file list:
 ```bash
@@ -1171,13 +1171,13 @@ for f in digit_entry session state_machine store_core sync_core; do
 done
 ```
 
-- [ ] **Step 3: Run to verify it fails** — `cd tests/c && ./run.sh` (missing `store_core.h`).
+- [x] **Step 3: Run to verify it fails** — `cd tests/c && ./run.sh` (missing `store_core.h`).
 
-- [ ] **Step 4: Add `QueuedSession` to `model.h`**
+- [x] **Step 4: Add `QueuedSession` to `model.h`**
 
 Exactly the struct in Interfaces, after `Session`.
 
-- [ ] **Step 5: Write `store_core.h` / `store_core.c`**
+- [x] **Step 5: Write `store_core.h` / `store_core.c`**
 
 Fixed-width little-endian packing. Layout for a book: `id[16] title[48] int32 current_page, total_pages, pph_x100, hours_x100 uint8 color, pph_is_estimate, favorite` = 16 + 48 + 16 + 3 = 83 bytes. Session: `id[16] book_id[12] int32 start_page, end_page, duration_seconds` = 46 bytes. Implement with `memcpy` of the char arrays and manual byte writes for the ints (no struct packing assumptions):
 
@@ -1191,9 +1191,9 @@ static int get32(const unsigned char *p) {
 ```
 `store_core_book_key(i)` returns `STORE_KEY_BOOKS_BASE + i`, etc. Guard `index` against the `STORE_MAX_*` bounds (return -1 if out of range).
 
-- [ ] **Step 6: Run to verify it passes** — `cd tests/c && ./run.sh`.
+- [x] **Step 6: Run to verify it passes** — `cd tests/c && ./run.sh`.
 
-- [ ] **Step 7: Implement the `store.c` cache functions**
+- [x] **Step 7: Implement the `store.c` cache functions**
 
 ```c
 int store_books_count(void) {
@@ -1247,9 +1247,9 @@ void store_shadow_discard(void) {
 ```
 `#include "store_core.h"` in `store.c`.
 
-- [ ] **Step 8: Build check** — `cd watchapp && pebble build` (no errors; functions unused until Task 12).
+- [x] **Step 8: Build check** — `cd watchapp && pebble build` (no errors; functions unused until Task 12).
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add watchapp/src/c/store_core.* watchapp/src/c/store.* watchapp/src/c/model.h tests/c/test_store_core.c tests/c/run.sh
@@ -1274,7 +1274,7 @@ git commit -m "feat: watch books cache with fixed-width records and atomic shado
   int  store_next_session_seq(void);                          /* monotonic counter in persist, for unique ids */
   ```
 
-- [ ] **Step 1: Append a `store_core` test for compaction math**
+- [x] **Step 1: Append a `store_core` test for compaction math**
 
 ```c
 void t_queue_compaction_shifts_tail_down(void) {
@@ -1289,13 +1289,13 @@ void t_queue_compaction_shifts_tail_down(void) {
 ```
 Add `int store_core_queue_drop(QueuedSession *q, int n, int remove_index);` to `store_core.h/.c` (pure array compaction, returns new count). Register the test in `TEST_BEGIN`.
 
-- [ ] **Step 2: Run to verify it fails** — `cd tests/c && ./run.sh`.
+- [x] **Step 2: Run to verify it fails** — `cd tests/c && ./run.sh`.
 
-- [ ] **Step 3: Implement `store_core_queue_drop`** — memmove the tail down, return `n - 1`.
+- [x] **Step 3: Implement `store_core_queue_drop`** — memmove the tail down, return `n - 1`.
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/c && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/c && ./run.sh`.
 
-- [ ] **Step 5: Implement the `store.c` queue functions**
+- [x] **Step 5: Implement the `store.c` queue functions**
 
 ```c
 int store_queue_count(void) {
@@ -1343,9 +1343,9 @@ int store_next_session_seq(void) {
 }
 ```
 
-- [ ] **Step 6: Build check** — `cd watchapp && pebble build`.
+- [x] **Step 6: Build check** — `cd watchapp && pebble build`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add watchapp/src/c/store.* watchapp/src/c/store_core.* tests/c/test_store_core.c

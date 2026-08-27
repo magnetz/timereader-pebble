@@ -53,4 +53,15 @@ typedef struct {
   int duration_seconds;
 } Session;
 
+/* A completed session waiting in the watch's persistent queue for the
+   phone to ACK it (SP2). No absolute timestamp — the phone stamps
+   created_at on arrival. */
+typedef struct {
+  char id[16];
+  char book_id[12];
+  int start_page;
+  int end_page;
+  int duration_seconds;
+} QueuedSession;
+
 #endif
