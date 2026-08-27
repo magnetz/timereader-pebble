@@ -1,5 +1,28 @@
 # Rebble App Store listing
 
+**Published:** https://apps.rePebble.com/651226388f4f4e8989e1f1f2
+(app id `651226388f4f4e8989e1f1f2`). Live at 1.0.1.
+
+## Still to do in the Rebble dashboard (CLI can't do these)
+
+`pebble publish` created releases 1.0.2 and 1.0.3 and uploaded 5
+screenshots, but the public listing still shows 1.0.1 with 1 screenshot
+and a short description. Rebble holds updates for manual promotion, and
+`--description` only applies at app-creation time. In
+<https://dev-portal.rebble.io/> → TimeReader:
+
+1. **Promote release 1.0.3** to published (or whichever is latest).
+2. **Replace the description** with the long version below (the app was
+   created with a one-line placeholder).
+3. **Confirm the 5 screenshots** are attached and ordered
+   list → detail → time/remaining → timer → summary.
+4. Optionally set a nicer icon (current one is `docs/store/icon-large.png`,
+   a flat clock).
+
+Future updates once the above is done: `cd watchapp && pebble clean &&
+pebble build && pebble publish --release-notes "..."`, then promote in the
+dashboard.
+
 Assets live in `docs/store/`.
 
 - **Name:** TimeReader
