@@ -1,7 +1,7 @@
 {
   "name": "timereader",
   "author": "Luca Magnetti",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
@@ -13,6 +13,7 @@
     "watchapp": {
       "watchface": false
     },
+    "capabilities": ["configurable"],
     "enableMultiJS": true,
     "messageKeys": [
       "SNAPSHOT_BEGIN", "SNAPSHOT_END",
