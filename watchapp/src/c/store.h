@@ -22,4 +22,20 @@ PersistedSession store_load_session(void);
 void store_save_selected_book(int index);
 int store_load_selected_book(void); /* 0 if unset */
 
+/* --- SP2: digested-book cache with atomic shadow commit --- */
+int  store_books_count(void);
+int  store_books_load(DigestBook *out, int max);   /* fills out[0..count); returns count */
+void store_shadow_begin(int count);                /* clears shadow, records expected count */
+void store_shadow_put(int index, const DigestBook *b);
+void store_shadow_commit(void);                    /* shadow -> cache, then clears shadow */
+void store_shadow_discard(void);
+
+/* --- SP2: persistent completed-session queue --- */
+int  store_queue_count(void);
+bool store_queue_head(QueuedSession *out);            /* false if the queue is empty */
+bool store_queue_contains(const char *id);
+bool store_queue_push(const QueuedSession *s);        /* false if full (STORE_MAX_QUEUE) */
+void store_queue_remove(const char *id);              /* drop the entry with this id, compact */
+int  store_next_session_seq(void);                    /* monotonic counter for unique session ids */
+
 #endif

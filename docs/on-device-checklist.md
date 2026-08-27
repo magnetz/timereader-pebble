@@ -83,3 +83,20 @@ cd watchapp && pebble build && pebble install --emulator basalt
       the **paused** timer at roughly the last-persisted elapsed, and the
       time does not tick until you press Select.
 - [ ] With no session in progress the app opens on the book list.
+
+## SP2 — companion + Bluetooth sync
+
+- [ ] With the phone reachable, opening the watchapp pulls the library:
+      the book list matches what the config page shows (titles, colours,
+      favourite order). An empty library shows "Nessun libro".
+- [ ] Editing a book / adding a session in the config page and closing it
+      updates the watch on its next open (or immediately if it is open).
+- [ ] Completing a session on the watch makes it appear under its book in
+      the config page, with the book's current page / colour updated.
+- [ ] Retract from the summary (Up / long Back) removes that session from
+      the config page; returning to book detail first makes it permanent.
+- [ ] Turn Bluetooth off, complete a session, turn it back on (or reopen
+      the app): the queued session drains to the phone with no data loss
+      and no blocking error on the watch.
+- [ ] Kill the app mid-snapshot (BT drop): the previous book list is
+      still shown, not a partial one.

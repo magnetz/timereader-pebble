@@ -9,7 +9,7 @@ SRC=../../watchapp/src/c
 CFLAGS="-std=c11 -Wall -Wextra -Werror -I$SRC"
 
 IMPL=""
-for f in digit_entry session state_machine; do
+for f in digit_entry session state_machine store_core sync_core; do
   [ -f "$SRC/$f.c" ] && IMPL="$IMPL $SRC/$f.c"
 done
 
