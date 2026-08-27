@@ -273,7 +273,8 @@
   }
 
   function render(s) { state = s || state; renderBooks(); }
-  function buildResult() { return { books: state.books, sessionOps: ops }; }
+  /* Books in display order so the phone can persist `order` = position. */
+  function buildResult() { return { books: sortedBooks(), sessionOps: ops }; }
 
   window.__tr = {
     decode: decode, render: render, escapeHtml: escapeHtml, buildResult: buildResult,

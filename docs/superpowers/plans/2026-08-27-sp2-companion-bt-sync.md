@@ -927,7 +927,7 @@ git commit -m "feat: config page per-book sessions with client validation"
   CONFIG_BASE_URL               // 'https://<user>.github.io/timereader-pebble/' (placeholder; set in Task 11)
   ```
 
-- [ ] **Step 1: Write the failing tests** — `tests/js/test_index_bridge.mjs`
+- [x] **Step 1: Write the failing tests** — `tests/js/test_index_bridge.mjs`
 
 ```js
 import { test } from 'node:test';
@@ -980,9 +980,9 @@ test('applyConfigResult ignores a cancelled result', async () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — module missing.
+- [x] **Step 2: Run to verify it fails** — module missing.
 
-- [ ] **Step 3: Write `index.js` (config bridge portion; sync portion is Task 10)**
+- [x] **Step 3: Write `index.js` (config bridge portion; sync portion is Task 10)**
 
 ```js
 var datastore = require('./datastore');
@@ -1045,9 +1045,9 @@ if (typeof Pebble !== 'undefined') {
 module.exports = api;
 ```
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/pkjs/index.js tests/js/test_index_bridge.mjs
@@ -1686,7 +1686,7 @@ git commit -m "feat: AppMessage adapter wiring sync_core to PebbleOS"
   ```
   The real file also wires `sendSnapshot()` (sends the array one dict at a time, each after the previous `ACK`/`NACK` callback) and the `appmessage` listener.
 
-- [ ] **Step 1: Append failing tests**
+- [x] **Step 1: Append failing tests**
 
 ```js
 test('buildSnapshotMessages brackets the books with BEGIN/END', async () => {
@@ -1721,9 +1721,9 @@ test('handleRetractMessage deletes and acks', async () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
+- [x] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 3: Implement in `index.js`**
+- [x] **Step 3: Implement in `index.js`**
 
 ```js
 function buildSnapshotMessages() {
@@ -1780,9 +1780,9 @@ if (typeof Pebble !== 'undefined') {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/pkjs/index.js tests/js/test_index_bridge.mjs
