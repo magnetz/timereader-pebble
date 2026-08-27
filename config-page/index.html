@@ -278,6 +278,15 @@
   /* Books in display order so the phone can persist `order` = position. */
   function buildResult() { return { books: sortedBooks(), sessionOps: ops }; }
 
+  /* On a real phone the Pebble app catches pebblejs://close#<json>.
+     `pebble emu-app-config` instead passes ?return_to=<url> and expects
+     the page to navigate there with the encoded result appended. */
+  function closeWith(result) {
+    var m = location.search.match(/[?&]return_to=([^&]+)/);
+    var base = m ? decodeURIComponent(m[1]) : 'pebblejs://close#';
+    location.href = base + encodeURIComponent(JSON.stringify(result));
+  }
+
   window.__tr = {
     decode: decode, render: render, escapeHtml: escapeHtml, buildResult: buildResult,
     openForm: openForm, submitForm: submitForm, deleteBook: deleteBook,
@@ -314,10 +323,10 @@
     f.reset();
   });
   document.getElementById('save').addEventListener('click', function () {
-    location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(buildResult()));
+    closeWith(buildResult());
   });
   document.getElementById('cancel').addEventListener('click', function () {
-    location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify({ cancelled: true }));
+    closeWith({ cancelled: true });
   });
 })();
 </script>

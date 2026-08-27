@@ -129,8 +129,14 @@ if (typeof Pebble !== 'undefined') {
   });
 
   Pebble.addEventListener('webviewclosed', function (e) {
+    var raw = e && e.response ? e.response : '';
     var result = {};
-    try { result = JSON.parse(decodeURIComponent(e.response || '')); } catch (x) { result = {}; }
+    try {
+      result = JSON.parse(raw);
+    } catch (x) {
+      try { result = JSON.parse(decodeURIComponent(raw)); } catch (y) { result = {}; }
+    }
+    console.log('[TR] config closed, ' + ((result.books || []).length) + ' books back');
     applyConfigResult(result).then(function () { sendSnapshot(); });
   });
 }
