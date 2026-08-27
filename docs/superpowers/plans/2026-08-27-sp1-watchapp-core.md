@@ -927,7 +927,7 @@ git commit -m "feat: book list window with native MenuLayer and state colours"
 - Consumes: `ui_common.h`, `session.h`.
 - Produces: `Window *ui_detail_window(void);`, `void ui_detail_refresh(void);`
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 One window, `StatusBarLayer` on top, a custom `Layer` update proc drawing the current `g_ctx.detail_page`:
 - Page 0: title (`GOTHIC_18`), current page (big `GOTHIC_28_BOLD`), "Pag/ora" value with "(stima)" suffix when `book.pph_is_estimate`.
@@ -936,15 +936,15 @@ One window, `StatusBarLayer` on top, a custom `Layer` update proc drawing the cu
 A tiny page-dots indicator bottom-centre (three dots, active filled) — draw manually, this matches the system paging idiom.
 `SELECT` → `ui_dispatch(EV_SELECT)`; `BACK` → `ui_dispatch(EV_BACK)`; `UP`/`DOWN` → `ui_dispatch(EV_UP/EV_DOWN)` then `ui_detail_refresh()`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_BOOK_DETAIL` → detail window on top.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 Screenshot each of the 3 pages (Down cycles). Confirm "(stima)" shows on "Il Nome della Rosa" page 0 and not on "La Storia Infinita". Back returns to the list.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_detail.* watchapp/src/c/ui_common.c
