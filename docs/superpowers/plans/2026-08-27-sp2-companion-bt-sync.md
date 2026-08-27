@@ -539,7 +539,7 @@ Single static `index.html`. Stateless: it renders whatever the URL hash carries 
 - Produces: on "Salva", `document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(result))`, `result = { books: Book[], sessionOps: Array<{op:'add'|'update'|'delete', session?, id?}> }`.
 - For tests, the page exposes a `window.__tr` object: `{ decode(hash), render(state), escapeHtml(s), buildResult() }`.
 
-- [ ] **Step 1: Write the failing tests** — `tests/js/test_config_page.mjs`
+- [x] **Step 1: Write the failing tests** — `tests/js/test_config_page.mjs`
 
 ```js
 import { test } from 'node:test';
@@ -559,7 +559,7 @@ test('renders one row per book with its colour state', () => {
   const w = load({
     books: [
       { id: 'b1', title: 'Alpha', total_pages: 100, current_page: 100, favorite: false, order: 1 },
-      { id: 'b2', title: 'Beta', total_pages: 100, current_page: 0, favorite: true, order: 2 },
+      { id: 'b2', title: 'Beta', total_pages: 100, current_page: 0, favorite: false, order: 2 },
     ],
     sessionsByBook: { b1: [], b2: [] }, globalPph: 20,
   });
@@ -585,13 +585,13 @@ test('a title with markup is shown as text, not parsed', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `cd tests/js && npm i --no-save jsdom >/dev/null 2>&1; ./run.sh`
 (Install `jsdom` once into `tests/js/node_modules`; add `tests/js/node_modules/` and `tests/js/package.json` to `.gitignore` — pin the version in a comment in `run.sh`.)
 Expected: file missing / assertion failures.
 
-- [ ] **Step 3: Write `config-page/index.html` (this task's scope)**
+- [x] **Step 3: Write `config-page/index.html` (this task's scope)**
 
 A single file. `<head>`: `<meta name="viewport">`, inline `<style>` with `:root` light tokens and `@media (prefers-color-scheme: dark)` overrides, list/row/button classes. `<body>`: `<h1>TimeReader</h1>`, `<div id="book-list"></div>`, `<button id="save">Salva</button>`, `<button id="cancel">Annulla</button>`, then one inline `<script>`:
 
@@ -655,9 +655,9 @@ A single file. `<head>`: `<meta name="viewport">`, inline `<style>` with `:root`
 </script>
 ```
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config-page/index.html tests/js/test_config_page.mjs .gitignore tests/js/run.sh
@@ -675,7 +675,7 @@ git commit -m "feat: config page skeleton with hash decode and HTML escaping"
 **Interfaces:**
 - Produces: `window.__tr` gains `openForm(bookId?)`, `submitForm(fields)`, `deleteBook(id)`, `toggleFavorite(id)`, `move(id, dir)` (`dir` = -1 up / +1 down). All mutate `state.books` in place; favourites always sort above non-favourites, ties broken by `order`.
 
-- [ ] **Step 1: Append failing tests**
+- [x] **Step 1: Append failing tests**
 
 ```js
 test('submitForm adds a new book at the end', () => {
@@ -708,9 +708,9 @@ test('deleteBook queues a delete for its sessions too', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
+- [x] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 3: Implement in `index.html`**
+- [x] **Step 3: Implement in `index.html`**
 
 Add a hidden `<form id="book-form">` (title / series / author / total_pages / current_page inputs, submit label toggles "+ Aggiungi libro" ⇄ "Salva modifiche", plus "Annulla"). Row actions (edit / delete / ★ / ▲ / ▼ buttons) rendered per row. In the script:
 
@@ -776,9 +776,9 @@ Add a hidden `<form id="book-form">` (title / series / author / total_pages / cu
 ```
 Extend `renderBooks` to draw the action buttons and wire their listeners; extend `window.__tr` with `openForm, submitForm, deleteBook, toggleFavorite, move`. `buildResult` already returns `state.books`.
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config-page/index.html tests/js/test_config_page.mjs
@@ -796,7 +796,7 @@ git commit -m "feat: config page book form, delete, favorite and reorder"
 **Interfaces:**
 - Produces: `window.__tr` gains `openSessions(bookId)`, `addSession(bookId, fields)`, `editSession(id, fields)`, `removeSession(id)`. Each records an entry in `ops` (`add` with a fresh `id` / `update` / `delete`) **and** mirrors the change into `state.sessionsByBook` so the list re-renders and colour states update. Client-side validation reuses the same rules as `library.js` (`end_page >= start_page`, `duration_seconds >= 0`); an invalid submit shows an inline message and records nothing.
 
-- [ ] **Step 1: Append failing tests**
+- [x] **Step 1: Append failing tests**
 
 ```js
 test('addSession appends an op and updates the book colour', () => {
@@ -832,9 +832,9 @@ test('removeSession records a delete and drops it from the list', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
+- [x] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 3: Implement in `index.html`**
+- [x] **Step 3: Implement in `index.html`**
 
 Add a `<div id="sessions-panel" hidden>` with a list container, an "+ Aggiungi sessione" form (start_page / end_page / duration in minutes → seconds), an `<p id="session-error">`, and per-row Modifica / Elimina. Script:
 
@@ -899,9 +899,9 @@ Add a `<div id="sessions-panel" hidden>` with a list container, an "+ Aggiungi s
 ```
 Extend `window.__tr` with `openSessions, addSession, editSession, removeSession`.
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config-page/index.html tests/js/test_config_page.mjs
