@@ -792,7 +792,7 @@ git commit -m "feat: 4-button reading-timer state machine with end-session menu 
   int  store_load_selected_book(void);            /* 0 if unset */
   ```
 
-- [ ] **Step 1: Write `seed.c` / `seed.h`**
+- [x] **Step 1: Write `seed.c` / `seed.h`**
 
 ```c
 static const DigestBook BOOKS[] = {
@@ -804,16 +804,16 @@ static const DigestBook BOOKS[] = {
 const DigestBook *seed_books(int *count_out) { *count_out = 2; return BOOKS; }
 ```
 
-- [ ] **Step 2: Write `store.c` / `store.h`**
+- [x] **Step 2: Write `store.c` / `store.h`**
 
 Use `persist_write_data`/`persist_read_data` with a packed struct for the session key; `persist_write_int`/`persist_read_int` for the selected-book index. `store_load_session` sets `.present = persist_exists(STORE_KEY_CUR_SESSION)`. Guard every read with `persist_exists`.
 
-- [ ] **Step 3: Build check**
+- [x] **Step 3: Build check**
 
 Run: `cd watchapp && pebble build`
 Expected: compiles (files are referenced once `main.c` includes them in Task 7; for now add them to `wscript`'s source glob if it is not automatic — the default `pebble` wscript globs `src/c/**/*.c`, so no change needed). If `pebble build` reports "unused", that is fine; confirm no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/seed.* watchapp/src/c/store.*
