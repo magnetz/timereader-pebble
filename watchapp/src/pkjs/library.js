@@ -32,7 +32,44 @@ function validateSession(s) {
   return null;
 }
 
+function bookStats(book, sessions, globalPph) {
+  sessions = sessions || [];
+  var estimate = sessions.length === 0;
+  var pph = estimate ? (globalPph || 0) : pagesPerHour(sessions);
+  var cur = bookCurrentPage(book, sessions);
+  var left = Math.max(0, (book.total_pages || 0) - cur);
+  return {
+    totalHours: totalHours(sessions),
+    pagesPerHour: pph,
+    currentPage: cur,
+    pagesLeft: left,
+    etaMinutes: pph > 0 ? (left / pph) * 60 : 0,
+    pphIsEstimate: estimate,
+  };
+}
+function _colorCode(name) { return name === 'completed' ? 2 : name === 'started' ? 1 : 0; }
+function digestBook(book, sessions, globalPph) {
+  var st = bookStats(book, sessions, globalPph);
+  var color = _colorCode(colorState(book, sessions));
+  var flags = (st.pphIsEstimate ? 1 : 0) | (book.favorite ? 2 : 0) | (color === 2 ? 4 : 0);
+  return {
+    id: book.id, title: book.title || '',
+    color: color, cur_page: st.currentPage, tot_pages: book.total_pages || 0,
+    pph_x100: Math.round(st.pagesPerHour * 100), hours_x100: Math.round(st.totalHours * 100),
+    flags: flags,
+  };
+}
+function computeSnapshot(books, sessionsByBook) {
+  sessionsByBook = sessionsByBook || {};
+  var every = [];
+  Object.keys(sessionsByBook).forEach(function (k) { every = every.concat(sessionsByBook[k] || []); });
+  var g = globalPagesPerHour(every);
+  return books.slice().sort(function (a, b) { return (a.order || 0) - (b.order || 0); })
+    .map(function (b) { return digestBook(b, sessionsByBook[b.id] || [], g); });
+}
+
 module.exports = {
   pagesPerHour: pagesPerHour, totalHours: totalHours, bookCurrentPage: bookCurrentPage,
   globalPagesPerHour: globalPagesPerHour, colorState: colorState, validateSession: validateSession,
+  bookStats: bookStats, digestBook: digestBook, computeSnapshot: computeSnapshot,
 };

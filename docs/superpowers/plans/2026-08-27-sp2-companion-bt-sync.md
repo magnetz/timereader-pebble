@@ -431,7 +431,7 @@ Adds the estimate fallback and the digested-record builder the watch consumes.
     // globalPph computed once from every session; -> digestBook[] in book order
   ```
 
-- [ ] **Step 1: Append failing tests**
+- [x] **Step 1: Append failing tests**
 
 ```js
 test('bookStats falls back to the global rate until the book has a session', () => {
@@ -473,9 +473,9 @@ test('computeSnapshot returns records in book order with one global rate', () =>
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
+- [x] **Step 2: Run to verify it fails** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 3: Implement in `library.js`**
+- [x] **Step 3: Implement in `library.js`**
 
 ```js
 function bookStats(book, sessions, globalPph) {
@@ -516,9 +516,9 @@ function computeSnapshot(books, sessionsByBook) {
 ```
 Add `bookStats, digestBook, computeSnapshot` to `module.exports`.
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/pkjs/library.js tests/js/test_library.mjs
