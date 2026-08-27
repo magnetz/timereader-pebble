@@ -17,6 +17,10 @@ GColor ui_color_for_book_state(BookColorState s);
 /* StatusBarLayer across the top of a long-lived window, app-consistent. */
 void ui_setup_status_bar(Window *w);
 
+/* Format an elapsed duration: "mm:ss" under an hour, "h:mm:ss" from an
+   hour up. buf should hold at least 12 bytes. */
+void ui_format_duration(char *buf, size_t n, int seconds);
+
 /* Push/pop windows so the window stack matches g_ctx.state. */
 void ui_route_to_state(void);
 

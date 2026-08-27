@@ -45,10 +45,22 @@ void t_pages_left_and_eta(void) {
   CHECK_EQ_INT(eta_minutes(20, 0), 0, "no rate");
 }
 
+void t_format_duration(void) {
+  char b[12];
+  session_format_duration(b, sizeof(b), 0);      CHECK_EQ_STR(b, "00:00", "");
+  session_format_duration(b, sizeof(b), 65);     CHECK_EQ_STR(b, "01:05", "");
+  session_format_duration(b, sizeof(b), 3599);   CHECK_EQ_STR(b, "59:59", "just under an hour");
+  session_format_duration(b, sizeof(b), 3600);   CHECK_EQ_STR(b, "1:00:00", "an hour");
+  session_format_duration(b, sizeof(b), 4520);   CHECK_EQ_STR(b, "1:15:20", "over an hour");
+  session_format_duration(b, sizeof(b), 36000);  CHECK_EQ_STR(b, "10:00:00", "ten hours");
+  session_format_duration(b, sizeof(b), -5);     CHECK_EQ_STR(b, "00:00", "negative clamps");
+}
+
 TEST_BEGIN()
   t_elapsed_across_pause();
   t_pph_is_sum_over_sum_not_mean_of_means();
   t_total_hours();
   t_current_page_prefers_last_session();
   t_pages_left_and_eta();
+  t_format_duration();
 TEST_END()

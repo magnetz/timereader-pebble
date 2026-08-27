@@ -15,7 +15,18 @@
     },
     "messageKeys": [],
     "resources": {
-      "media": []
+      "media": [
+        {
+          "type": "raw",
+          "name": "ICON_PLAY",
+          "file": "icons/play.pdc"
+        },
+        {
+          "type": "raw",
+          "name": "ICON_PAUSE",
+          "file": "icons/pause.pdc"
+        }
+      ]
     }
   }
 }

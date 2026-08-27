@@ -31,13 +31,13 @@ static void draw_row(GContext *gctx, const Layer *cell, MenuIndex *idx, void *ct
   }
 
   graphics_draw_text(gctx, title, fonts_get_system_font(FONT_KEY_GOTHIC_18),
-                     GRect(bounds.origin.x + 4, bounds.origin.y,
-                           bounds.size.w - 8, bounds.size.h),
+                     GRect(bounds.origin.x + 4, bounds.origin.y + 2,
+                           bounds.size.w - 8, bounds.size.h - 4),
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentLeft, NULL);
 }
 
 static int16_t get_cell_height(MenuLayer *menu, MenuIndex *idx, void *ctx) {
-  return 36;
+  return 46;
 }
 
 static void selection_changed(MenuLayer *menu, MenuIndex new_index,

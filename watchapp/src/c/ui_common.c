@@ -33,6 +33,10 @@ void ui_setup_status_bar(Window *w) {
   layer_add_child(root, status_bar_layer_get_layer(sb));
 }
 
+void ui_format_duration(char *buf, size_t n, int seconds) {
+  session_format_duration(buf, (int)n, seconds);
+}
+
 /* --- window-stack routing --------------------------------------------- */
 
 /* Desired window stack, deepest first. Windows not yet implemented in the

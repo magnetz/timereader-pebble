@@ -1,4 +1,17 @@
 #include "session.h"
+#include <stdio.h>
+
+void session_format_duration(char *buf, int buf_size, int seconds) {
+  if (seconds < 0) seconds = 0;
+  int h = seconds / 3600;
+  int m = (seconds % 3600) / 60;
+  int s = seconds % 60;
+  if (h > 0) {
+    snprintf(buf, buf_size, "%d:%02d:%02d", h, m, s);
+  } else {
+    snprintf(buf, buf_size, "%02d:%02d", m, s);
+  }
+}
 
 void live_session_start(LiveSession *s, int start_page, int now) {
   s->start_page = start_page;

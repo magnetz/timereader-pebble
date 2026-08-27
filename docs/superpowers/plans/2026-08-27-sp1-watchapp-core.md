@@ -998,25 +998,25 @@ git commit -m "feat: animated 4-digit page entry window"
 - Consumes: `ui_common.h`, `session.h`.
 - Produces: `Window *ui_timer_window(void);`, `void ui_timer_refresh(void);`
 
-- [ ] **Step 1: Add PDC resources**
+- [x] **Step 1: Add PDC resources**
 
 Create two small Pebble Draw Command images (24×24): `play.pdc` (triangle) and `pause.pdc` (two bars). Register under `resources.media` in `package.json` as `RESOURCE_ID_ICON_PLAY`, `RESOURCE_ID_ICON_PAUSE`.
 
-- [ ] **Step 2: Implement**
+- [x] **Step 2: Implement**
 
 `StatusBarLayer` on top. Centre: `mm:ss` in `BITHAM_42_BOLD` from `live_session_elapsed(&g_ctx.live, time(NULL))`. Below it: book title (`GOTHIC_18`). When `g_ctx.state == APP_PAUSED`, draw "PAUSA" under the time in `GColorChromeYellow`.
 `ActionBarLayer` on the right: middle icon = pause icon when `APP_RUNNING`, play icon when `APP_PAUSED`. `SELECT` → `ui_dispatch(EV_SELECT)` (pause/resume). `BACK` → `ui_dispatch(EV_BACK)` (opens end menu).
 The `EV_TICK` dispatch already runs every second (Task 7); `ui_timer_refresh` re-reads elapsed and marks the layer dirty. Do **not** advance time when `APP_PAUSED` (guaranteed by `live_session_elapsed` with `segment_start == -1`).
 
-- [ ] **Step 3: Wire into `ui_route_to_state`**
+- [x] **Step 3: Wire into `ui_route_to_state`**
 
 `APP_RUNNING` and `APP_PAUSED` → timer window on top.
 
-- [ ] **Step 4: Emulator check**
+- [x] **Step 4: Emulator check**
 
 Start a session; the timer counts up once per second. Select pauses (shows "PAUSA", play icon, time frozen), Select resumes. Screenshot both states. Back opens the end menu (Task 12).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/ui_timer.* watchapp/resources watchapp/package.json watchapp/src/c/ui_common.c

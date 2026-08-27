@@ -22,4 +22,7 @@ int current_page_from_sessions(const Session *sessions, int count, int book_curr
 int pages_left(int total_pages, int current_page);                  /* max(0, total - current) */
 int eta_minutes(int pages_left_count, int pph_x100);                /* 0 if pph_x100 == 0 */
 
+/* "mm:ss" below an hour, "h:mm:ss" from an hour up. buf needs >= 12 bytes. */
+void session_format_duration(char *buf, int buf_size, int seconds);
+
 #endif
