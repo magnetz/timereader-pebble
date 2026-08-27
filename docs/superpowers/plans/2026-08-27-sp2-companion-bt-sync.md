@@ -351,11 +351,11 @@ test('validateSession', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `cd tests/js && ./run.sh` — module missing.
 
-- [ ] **Step 3: Write `library.js` (this task's exports only)**
+- [x] **Step 3: Write `library.js` (this task's exports only)**
 
 ```js
 function _sum(a, f) { return a.reduce(function (m, x) { return m + f(x); }, 0); }
@@ -394,9 +394,9 @@ module.exports = {
 };
 ```
 
-- [ ] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
+- [x] **Step 4: Run to verify it passes** — `cd tests/js && ./run.sh`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/pkjs/library.js tests/js/test_library.mjs
@@ -1659,9 +1659,9 @@ int  sync_books_into(DigestBook *out, int max) { return store_books_load(out, ma
 ```
 `app_message_open` inbox size 512 covers a `BOOK` record (id+title+7 ints ≈ 130 B plus dict overhead).
 
-- [ ] **Step 3: Build check** — `cd watchapp && pebble build`. Expected: compiles; `MESSAGE_KEY_*` resolve from the generated header.
+- [x] **Step 3: Build check** — `cd watchapp && pebble build`. Expected: compiles; `MESSAGE_KEY_*` resolve from the generated header.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/sync.* watchapp/package.json
@@ -1906,9 +1906,9 @@ git commit -m "feat: drive the watchapp from the sync cache and feed the session
 - Modify: `config-page/index.html`, `watchapp/src/pkjs/index.js` (`CONFIG_BASE_URL`)
 - Create: `config-page/README.md`, `.github/workflows/pages.yml` (optional static deploy)
 
-- [ ] **Step 1: Set the real config URL** — replace `CONFIG_BASE_URL` in `index.js` with `https://<github-user>.github.io/timereader-pebble/config-page/` (ask the user for their GitHub username; if unknown, leave a clearly-marked `TODO(user)` and note it in the commit body and HANDOFF).
+- [x] **Step 1: Set the real config URL** — replace `CONFIG_BASE_URL` in `index.js` with `https://<github-user>.github.io/timereader-pebble/config-page/` (ask the user for their GitHub username; if unknown, leave a clearly-marked `TODO(user)` and note it in the commit body and HANDOFF).
 
-- [ ] **Step 2: Polish the page** — dark/light tokens verified, focus styles, `<label>`s wired, buttons reachable by keyboard, the sessions panel and book form collapse cleanly. No functional change; keep all `tests/js` green.
+- [x] **Step 2: Polish the page** — dark/light tokens verified, focus styles, `<label>`s wired, buttons reachable by keyboard, the sessions panel and book form collapse cleanly. No functional change; keep all `tests/js` green.
 
 - [x] **Step 3: Write `config-page/README.md`** — one paragraph: what the page is, that it is stateless and driven by the URL hash, how to preview it locally (`python3 -m http.server` then open with a hand-built hash), and that `pebble emu-app-config` drives the full cycle.
 
@@ -1978,7 +1978,7 @@ git commit -m "docs: SP2 end-to-end verification notes and checklist"
 - Create: `docs/distribution.md`
 - Modify: `README.md`
 
-- [ ] **Step 1: Write `docs/distribution.md`**
+- [x] **Step 1: Write `docs/distribution.md`**
 
 Port the spec's "Distribuzione" section into a runnable checklist: building the release `.pbw` (`pebble build`, artefact at `watchapp/build/watchapp.pbw`), attaching it to a GitHub Release, sideloading via "Sideload Helper by Rebble" / the Pebble app, and submitting to the Rebble App Store (free). Note that Pebble Time is Bluetooth-only — no USB install — and that the config page updates independently of the `.pbw` as long as the `messageKeys` don't change.
 
