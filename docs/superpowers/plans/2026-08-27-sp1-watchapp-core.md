@@ -963,21 +963,21 @@ git commit -m "feat: book detail window with 3 info pages and estimate flag"
 - Consumes: `ui_common.h`, `digit_entry.h`.
 - Produces: `Window *ui_digit_window(void);`, `void ui_digit_refresh(void);`, `void ui_digit_flash_error(void);` (shows the "Pagina finale < iniziale" flash for ~1.5s; called by `ui_dispatch` on `FX_PAGE_ERROR` in Task 13)
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 `StatusBarLayer` + a custom layer drawing 4 large digits (`BITHAM_42_BOLD`) evenly spaced, the active one (`g_ctx.entry.cursor`) underlined or boxed. A title line: "Pagina iniziale" or "Pagina finale" from `g_ctx.state`. On a `FX_PAGE_ERROR` result, flash a red "Pagina finale < iniziale" message for ~1.5s (an `AppTimer` that clears a flag, then `ui_digit_refresh`).
 Cursor movement between digits animates with `PropertyAnimation` on the highlight layer's frame, `animation_set_curve(anim, AnimationCurveEaseInOut)`, `animation_set_duration(anim, 120)`.
 Clicks: `UP`→`EV_UP`, `DOWN`→`EV_DOWN`, `SELECT`→`EV_SELECT`, `BACK`→`EV_BACK` — all via `ui_dispatch`, then `ui_digit_refresh()`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_ENTER_START_PAGE` and `APP_ENTER_END_PAGE` → digit window on top (reuse the same window instance, just refresh).
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 From detail, Select opens digit entry prefilled with the current page. Up/Down change the active digit, Select advances with the sliding highlight, Back steps back, Back on digit 0 returns to detail. Enter a full start page → logs show `APP_RUNNING`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_digit.* watchapp/src/c/ui_common.c
