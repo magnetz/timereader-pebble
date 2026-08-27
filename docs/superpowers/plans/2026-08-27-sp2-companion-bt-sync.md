@@ -1910,11 +1910,11 @@ git commit -m "feat: drive the watchapp from the sync cache and feed the session
 
 - [ ] **Step 2: Polish the page** — dark/light tokens verified, focus styles, `<label>`s wired, buttons reachable by keyboard, the sessions panel and book form collapse cleanly. No functional change; keep all `tests/js` green.
 
-- [ ] **Step 3: Write `config-page/README.md`** — one paragraph: what the page is, that it is stateless and driven by the URL hash, how to preview it locally (`python3 -m http.server` then open with a hand-built hash), and that `pebble emu-app-config` drives the full cycle.
+- [x] **Step 3: Write `config-page/README.md`** — one paragraph: what the page is, that it is stateless and driven by the URL hash, how to preview it locally (`python3 -m http.server` then open with a hand-built hash), and that `pebble emu-app-config` drives the full cycle.
 
-- [ ] **Step 4: (Optional) `.github/workflows/pages.yml`** — deploy `config-page/` to GitHub Pages on push to `main`. If the user prefers manual Pages setup, skip this file and note it.
+- [x] **Step 4: (Optional) `.github/workflows/pages.yml`** — deploy `config-page/` to GitHub Pages on push to `main`. If the user prefers manual Pages setup, skip this file and note it.
 
-- [ ] **Step 5: Run `tests/js` + commit**
+- [x] **Step 5: Run `tests/js` + commit**
 
 ```bash
 cd tests/js && ./run.sh
@@ -1930,7 +1930,7 @@ git commit -m "feat: config page polish and GitHub Pages deployment"
 - Modify: `docs/on-device-checklist.md`, `docs/HANDOFF.md`
 - Create: `docs/sp2-e2e-notes.md`
 
-- [ ] **Step 1: Config round-trip in the emulator**
+- [x] **Step 1: Config round-trip in the emulator**
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
@@ -1939,7 +1939,7 @@ pebble emu-app-config --file ../config-page/index.html   # or the deployed URL o
 ```
 Add two books and one session in the page, hit "Salva". Verify from `pebble logs` that `webviewclosed` fired, `applyConfigResult` ran, and `sendSnapshot` pushed `SNAPSHOT_BEGIN` → `BOOK` × 2 → `SNAPSHOT_END`. Screenshot the watch: the book list now shows the two real books with the right colours. Document the exact commands and expected log lines in `docs/sp2-e2e-notes.md`.
 
-- [ ] **Step 2: Session queue round-trip**
+- [x] **Step 2: Session queue round-trip**
 
 Start a session on the watch, save an end page, land on the summary. From `pebble logs` confirm `sync_core_enqueue` → `SESSION` sent → pkjs `handleSessionMessage` → `SESSION_ACK` → queue emptied. Reopen the config page: the new session is listed under its book, and the book's current page / colour updated. Screenshot.
 

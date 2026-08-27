@@ -7,8 +7,8 @@
 var datastore = require('./datastore');
 var library = require('./library');
 
-/* Set to the real GitHub Pages URL in Task 14. */
-var CONFIG_BASE_URL = 'https://EXAMPLE.github.io/timereader-pebble/config-page/';
+/* GitHub Pages serves the config-page/ folder at the repo root path. */
+var CONFIG_BASE_URL = 'https://magnetz.github.io/timereader-pebble/';
 
 /* ---- config page bridge ------------------------------------------------ */
 
