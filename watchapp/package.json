@@ -13,7 +13,14 @@
     "watchapp": {
       "watchface": false
     },
-    "messageKeys": [],
+    "enableMultiJS": true,
+    "messageKeys": [
+      "SNAPSHOT_BEGIN", "SNAPSHOT_END",
+      "BOOK_IDX", "BOOK_ID", "BOOK_TITLE", "BOOK_COLOR", "BOOK_CUR_PAGE",
+      "BOOK_TOT_PAGES", "BOOK_PPH_X100", "BOOK_HOURS_X100", "BOOK_FLAGS",
+      "SESSION_ID", "SESSION_BOOK_ID", "SESSION_START_PAGE", "SESSION_END_PAGE", "SESSION_DURATION_S",
+      "SESSION_ACK_ID", "SESSION_RETRACT_ID", "RETRACT_ACK_ID"
+    ],
     "resources": {
       "media": [
         {

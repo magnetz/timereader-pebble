@@ -1571,9 +1571,9 @@ git commit -m "feat: pure sync core for snapshot commit, session queue and retra
   int  sync_books_into(DigestBook *out, int max);   /* pass-through to store_books_load */
   ```
 
-- [ ] **Step 1: Update `package.json`** with the keys and `enableMultiJS`, then `cd watchapp && pebble build`. Expected: the generated `build/**/message_keys.*` now lists the keys; build succeeds.
+- [x] **Step 1: Update `package.json`** with the keys and `enableMultiJS`, then `cd watchapp && pebble build`. Expected: the generated `build/**/message_keys.*` now lists the keys; build succeeds.
 
-- [ ] **Step 2: Write `sync.c`**
+- [x] **Step 2: Write `sync.c`**
 
 Bridges AppMessage ⇄ `sync_core`. Sketch:
 ```c
