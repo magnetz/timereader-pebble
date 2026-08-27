@@ -1982,9 +1982,9 @@ git commit -m "docs: SP2 end-to-end verification notes and checklist"
 
 Port the spec's "Distribuzione" section into a runnable checklist: building the release `.pbw` (`pebble build`, artefact at `watchapp/build/watchapp.pbw`), attaching it to a GitHub Release, sideloading via "Sideload Helper by Rebble" / the Pebble app, and submitting to the Rebble App Store (free). Note that Pebble Time is Bluetooth-only — no USB install — and that the config page updates independently of the `.pbw` as long as the `messageKeys` don't change.
 
-- [ ] **Step 2: Update `README.md`** — add a "Distribution" pointer to the new doc and a one-line status: "SP1 + SP2 complete; publishing is manual per `docs/distribution.md`."
+- [x] **Step 2: Update `README.md`** — add a "Distribution" pointer to the new doc and a one-line status: "SP1 + SP2 complete; publishing is manual per `docs/distribution.md`."
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/distribution.md README.md
