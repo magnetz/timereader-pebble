@@ -88,9 +88,30 @@ recorded in `docs/sp2-e2e-notes.md`.
 - `CONFIG_BASE_URL` in `index.js` is `https://magnetz.github.io/timereader-pebble/`;
   GitHub Pages deploy is `.github/workflows/pages.yml` (serves `config-page/`).
 
-**Remaining:** Task 16 (distribution.md + README distribution pointer),
-then publish — rePebble store + `.pbw` on GitHub Releases + Pages enablement
-on the `magnetz/timereader-pebble` repo.
+## Published (1.1.0)
+
+- **rePebble store:** https://apps.rePebble.com/651226388f4f4e8989e1f1f2
+  (app id `651226388f4f4e8989e1f1f2`). `pebble publish` creates the
+  release; **promote it in the dashboard** at
+  <https://appstore-api.repebble.com/dashboard> — new versions and the
+  app description are held until then. `--description` only applies at
+  app creation, so the store description must be fixed by hand once.
+- **GitHub Releases:** `v1.1.0` etc. carry the `.pbw`.
+- **Config page:** GitHub Pages, `https://magnetz.github.io/timereader-pebble/`.
+
+**i18n:** the watchapp UI is English by default, Italian when
+`i18n_get_system_locale()` starts with `it` (`src/c/strings.{h,c}`, all
+`ui_*.c` text goes through `S(id)`). The config page mirrors this with a
+`navigator.language`-driven `en`/`it` table. New user-facing strings must
+be added to both tables.
+
+**Icon:** `docs/store/icon-large.png` — regenerate with
+`python3 tools/make-icon.py <path> <size>`.
+
+**Release checklist:** bump `package.json` version → `pebble clean &&
+pebble build` (clean is mandatory or `appinfo.json` keeps the old version)
+→ `pebble publish --release-notes "..."` → promote in the dashboard →
+`gh release create vX.Y.Z watchapp/build/watchapp.pbw`.
 
 ## How to work
 
