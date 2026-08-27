@@ -22,6 +22,7 @@
 - Session recovery rule (verbatim from spec): a session persisted as `RUNNING` **always** resumes as `PAUSED`, never auto-running; displayed elapsed time must not advance before an explicit resume.
 - Reading-rate rule (verbatim from original spec): average pages/hour is `Σ pages / Σ duration`, **never** the mean of per-session rates.
 - Page validation: `end_page >= start_page`; a lower value shows a brief error and does not complete the session.
+- **Start-page prefill (user rule, added 2026-08-27):** a new session prefills the start page as `current_page + 1` for a started book (you resume on the page *after* the last one read), or `1` for a never-started book. Pages read in a session are **inclusive**: `end_page - start_page + 1`. So reading 10→20 leaves the book at 20 and the next session prefills 21.
 - All commits use Conventional Commits (`feat:`, `test:`, `chore:`, `fix:`, `docs:`).
 
 ---

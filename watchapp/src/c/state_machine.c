@@ -2,6 +2,13 @@
 
 #include <string.h>
 
+/* Where a new session should start reading: the page after the last one
+   already read. A never-started book begins at page 1 (the user overrides
+   it by hand anyway). */
+static int prefill_start_page(const DigestBook *book) {
+  return book->current_page > 0 ? book->current_page + 1 : 1;
+}
+
 static void reset_menu(SmContext *c) {
   c->end_menu_index = 0;
   c->end_menu_confirming = false;
@@ -60,7 +67,8 @@ static SideEffect handle_digit(SmContext *c, const DigestBook *books, Event ev,
       } else {
         int end = digit_entry_value(&c->entry);
         if (end < c->start_page_for_session) return FX_PAGE_ERROR;
-        c->last_session_pages = end - c->start_page_for_session;
+        /* Inclusive: reading pages S..E covers (E - S + 1) pages. */
+        c->last_session_pages = end - c->start_page_for_session + 1;
         c->last_session_seconds = live_session_elapsed(&c->live, now);
         c->state = APP_SESSION_SUMMARY;
         return FX_SAVE_SESSION;
@@ -103,7 +111,7 @@ SideEffect sm_handle(SmContext *c, const DigestBook *books, Event ev, int now) {
         c->state = APP_LIST_BOOKS;
       } else if (ev == EV_SELECT) {
         if (books[c->book_index].color != BOOK_COMPLETED) {
-          digit_entry_init(&c->entry, books[c->book_index].current_page);
+          digit_entry_init(&c->entry, prefill_start_page(&books[c->book_index]));
           c->state = APP_ENTER_START_PAGE;
         }
       }

@@ -6,11 +6,11 @@ static DigestBook BOOKS[2] = {
   {.id = "b2", .title = "Beta",  .current_page = 0,  .total_pages = 0,   .color = BOOK_UNREAD},
 };
 
-/* Drive to APP_RUNNING with start page = book 0's current page (10). */
+/* Drive to APP_RUNNING with start page = book 0's next page (11). */
 static void to_running(SmContext *c, int now) {
   sm_init(c, BOOKS, 2, 0);
   sm_handle(c, BOOKS, EV_SELECT, 0);   /* list -> detail */
-  sm_handle(c, BOOKS, EV_SELECT, 0);   /* detail -> ENTER_START_PAGE (prefill 10) */
+  sm_handle(c, BOOKS, EV_SELECT, 0);   /* detail -> ENTER_START_PAGE (prefill 11) */
   for (int i = 0; i < 4; i++) sm_handle(c, BOOKS, EV_SELECT, now);
 }
 
@@ -37,13 +37,21 @@ void t_detail_pages_cycle(void) {
   sm_handle(&c, BOOKS, EV_UP, 0);   CHECK_EQ_INT(c.detail_page, 2, "wrap back");
 }
 
-void t_start_session_prefills_current_page(void) {
+void t_start_session_prefills_next_page(void) {
   SmContext c; sm_init(&c, BOOKS, 2, 0);
   sm_handle(&c, BOOKS, EV_SELECT, 0);
   SideEffect fx = sm_handle(&c, BOOKS, EV_SELECT, 0);
   CHECK_EQ_INT(c.state, APP_ENTER_START_PAGE, "");
-  CHECK_EQ_INT(digit_entry_value(&c.entry), 10, "prefilled from book.current_page");
+  CHECK_EQ_INT(digit_entry_value(&c.entry), 11, "prefilled with current_page + 1");
   CHECK_EQ_INT(fx, FX_NONE, "");
+}
+
+void t_unread_book_prefills_page_one(void) {
+  SmContext c; sm_init(&c, BOOKS, 2, 0);
+  sm_handle(&c, BOOKS, EV_DOWN, 0);     /* select book 1 (current_page 0) */
+  sm_handle(&c, BOOKS, EV_SELECT, 0);   /* detail */
+  sm_handle(&c, BOOKS, EV_SELECT, 0);   /* ENTER_START_PAGE */
+  CHECK_EQ_INT(digit_entry_value(&c.entry), 1, "unread book starts at page 1");
 }
 
 void t_completed_book_cannot_start(void) {
@@ -59,7 +67,7 @@ void t_completed_book_cannot_start(void) {
 void t_confirm_start_page_enters_running(void) {
   SmContext c; to_running(&c, 100);
   CHECK_EQ_INT(c.state, APP_RUNNING, "");
-  CHECK_EQ_INT(c.start_page_for_session, 10, "");
+  CHECK_EQ_INT(c.start_page_for_session, 11, "current_page 10 -> start 11");
   CHECK_EQ_INT(live_session_elapsed(&c.live, 130), 30, "");
 }
 
@@ -126,8 +134,8 @@ void t_end_menu_confirm_back_aborts_confirm(void) {
 void t_end_page_below_start_errors(void) {
   SmContext c; to_running(&c, 100);
   sm_handle(&c, BOOKS, EV_BACK, 100);
-  sm_handle(&c, BOOKS, EV_SELECT, 100);  /* ENTER_END_PAGE, prefill 10 */
-  c.entry.digits[2] = 0; c.entry.digits[3] = 5;  /* 0005 < 10 */
+  sm_handle(&c, BOOKS, EV_SELECT, 100);  /* ENTER_END_PAGE, prefill 11 */
+  c.entry.digits[2] = 0; c.entry.digits[3] = 5;  /* 0005 < 11 */
   SideEffect fx = FX_NONE;
   for (int i = 0; i < 4; i++) fx = sm_handle(&c, BOOKS, EV_SELECT, 100);
   CHECK_EQ_INT(fx, FX_PAGE_ERROR, "");
@@ -143,7 +151,7 @@ void t_valid_end_page_saves_then_summary(void) {
   for (int i = 0; i < 4; i++) fx = sm_handle(&c, BOOKS, EV_SELECT, 700);
   CHECK_EQ_INT(fx, FX_SAVE_SESSION, "");
   CHECK_EQ_INT(c.state, APP_SESSION_SUMMARY, "");
-  CHECK_EQ_INT(c.last_session_pages, 24, "34 - 10");
+  CHECK_EQ_INT(c.last_session_pages, 24, "inclusive: 34 - 11 + 1");
   CHECK_EQ_INT(c.last_session_seconds, 600, "elapsed 100..700");
 }
 
@@ -199,7 +207,8 @@ TEST_BEGIN()
   t_list_navigation_wraps();
   t_open_detail_and_back();
   t_detail_pages_cycle();
-  t_start_session_prefills_current_page();
+  t_start_session_prefills_next_page();
+  t_unread_book_prefills_page_one();
   t_completed_book_cannot_start();
   t_confirm_start_page_enters_running();
   t_back_on_first_digit_of_start_cancels_to_detail();
