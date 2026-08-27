@@ -842,11 +842,11 @@ git commit -m "feat: seed book data and persistent-storage wrappers"
   ```
   `ui_dispatch` is the single choke point: every window's click handler calls `ui_dispatch(EV_*)`.
 
-- [ ] **Step 1: Write `ui_common.c` skeleton**
+- [x] **Step 1: Write `ui_common.c` skeleton**
 
 `g_ctx`, `ui_books` (returns `seed_books`), `ui_color_for_book_state`, `ui_setup_status_bar` (create `StatusBarLayer`, `status_bar_layer_set_colors` to a fixed scheme, add to root). `ui_route_to_state` and `ui_dispatch` are stubs that call `sm_handle` and `APP_LOG` the new state for now.
 
-- [ ] **Step 2: Rewrite `main.c`**
+- [x] **Step 2: Rewrite `main.c`**
 
 ```c
 #include <pebble.h>
@@ -870,12 +870,12 @@ static void deinit(void) { }
 int main(void) { init(); app_event_loop(); deinit(); }
 ```
 
-- [ ] **Step 3: Build + emulator smoke check**
+- [x] **Step 3: Build + emulator smoke check**
 
 Run: `cd watchapp && pebble build && pebble install --emulator basalt && pebble logs`
 Expected: build succeeds; logs show the initial state (`APP_LIST_BOOKS`). No crash.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/main.c watchapp/src/c/ui_common.*
