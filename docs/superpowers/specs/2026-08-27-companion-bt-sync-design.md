@@ -346,7 +346,55 @@ telefono né watch fisico.
 ## Watchapp: interazione a 4 tasti (contesto SP2)
 
 Il dettaglio completo della UI è nello spec SP1; qui si fissano solo le
-interazioni che il protocollo di sync e le esigenze d'uso richiedono.
+interazioni che il protocollo di sync e le esigenze d'uso richiedono,
+più il vincolo trasversale di aderenza alle linee guida Pebble.
+
+### Aderenza alle linee guida UI ufficiali Pebble
+
+Requisito: l'app deve **assomigliare per grafica e animazioni alle app
+di sistema**. Si seguono le linee guida ufficiali
+(<https://developer.rebble.io/guides/design-and-interaction/recommended/>,
+<https://developer.rebble.io/docs/c/User_Interface/>) e si usano i
+componenti nativi invece di reimplementarli. Vincoli concreti, da
+dettagliare nello spec SP1:
+
+- **Tipo app**: watchapp lanciata dal launcher (non watchface), con
+  transizioni di window stack **di sistema** (push/pop): non si
+  sovrascrivono.
+- **Tasto Back**: sempre e solo `window_stack_pop`. Mai riassegnato.
+  Le eccezioni di questo spec (Back = cifra precedente, Back = apre
+  `END_SESSION_MENU`) restano "indietro di un passo" logico e sono
+  segnalate a schermo.
+- **Lista libri** → `MenuLayer` nativo: scroll Up/Down di sistema,
+  evidenziazione e animazione di selezione standard, `ContentIndicator`
+  per le frecce su/giù. Colore stato sul titolo (verde/ciano/bianco),
+  cursore di selezione gestito dal MenuLayer.
+- **`END_SESSION_MENU`** → `ActionMenu` nativo (breadcrumb e animazioni
+  di sistema), non una lista custom.
+- **Dettaglio libro / Timer / Riepilogo** → `Window` con
+  `StatusBarLayer` (obbligatoria nelle schermate a lunga durata come il
+  timer), layer custom per i valori. `ActionBarLayer` sul timer per
+  mostrare l'icona dell'azione Select (pausa/riprendi).
+- **Digit entry** → layer custom, ma le transizioni fra cifre usano
+  `PropertyAnimation` con curva di sistema (`AnimationCurveEaseInOut`
+  di default); nessun loop di redraw manuale (`AppTimer` sconsigliato
+  per l'UI).
+- **Tipografia di sistema**: `FONT_KEY_GOTHIC_28_BOLD` per i valori in
+  evidenza, `FONT_KEY_GOTHIC_18` per le label (min 18), `bitham` per
+  il `mm:ss` grande del timer. Nessun font custom salvo necessità.
+- **Colori**: palette coerente col sistema via `GColorFromRGB`; il
+  verde significa "completato", nessun rosso senza errore.
+- **Icone**: `PDC` (Pebble Draw Command, vettoriali) per restare
+  nitide e in stile di sistema; niente bitmap sgranate.
+- **Layout**: rispetto dei margini di sistema, nessun disegno sotto la
+  status bar, informazione minima per schermata.
+- **Animazioni**: solo via Animation API con curve di sistema, usate
+  per "guidare l'occhio" sui dati che cambiano (avanzamento cifra,
+  cambio pagina dettaglio), non decorative.
+
+Lo spec SP1 recepisce questi vincoli e ne definisce il dettaglio
+visivo (wireframe delle 6 schermate, mapping componenti, durate
+animazioni).
 
 ### Digit entry (`ENTER_START_PAGE` / `ENTER_END_PAGE`)
 
@@ -448,9 +496,11 @@ La config page vive su GitHub Pages, aggiornabile senza ripubblicare il
 
 ## Milestoni
 
-1. **SP1-a** — watchapp in emulatore con 2 libri hard-coded: lista,
-   dettaglio, timer, digit entry (con Back-per-cifra),
-   `END_SESSION_MENU`, riepilogo con retract, recovery. Nessun sync.
+1. **SP1-a** — watchapp in emulatore con 2 libri hard-coded: lista
+   (`MenuLayer`), dettaglio, timer (`StatusBarLayer` + `ActionBarLayer`),
+   digit entry (con Back-per-cifra), `END_SESSION_MENU` (`ActionMenu`),
+   riepilogo con retract, recovery. Transizioni e font di sistema.
+   Nessun sync.
 2. **SP1-b** — persistent storage (sessione corrente + selezione);
    checklist on-device su watch reale.
 3. **SP2-a** — `datastore.js` (localStorage) + `library.js` + test Node.
