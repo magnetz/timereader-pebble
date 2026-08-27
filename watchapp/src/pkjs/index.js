@@ -81,9 +81,13 @@ function handleRetractMessage(dict) {
 
 function sendSnapshot() {
   buildSnapshotMessages().then(function (msgs) {
+    console.log('[TR] snapshot: ' + (msgs.length - 2) + ' books');
     (function step(i) {
       if (i >= msgs.length) return;
-      Pebble.sendAppMessage(msgs[i], function () { step(i + 1); }, function () { step(i + 1); });
+      Pebble.sendAppMessage(msgs[i], function () { step(i + 1); }, function () {
+        console.log('[TR] snapshot send failed at ' + i);
+        step(i + 1);
+      });
     })(0);
   });
 }
@@ -99,13 +103,21 @@ var api = {
 };
 
 if (typeof Pebble !== 'undefined') {
-  Pebble.addEventListener('ready', function () { sendSnapshot(); });
+  Pebble.addEventListener('ready', function () {
+    console.log('[TR] pkjs ready, sending snapshot');
+    sendSnapshot();
+  });
 
   Pebble.addEventListener('appmessage', function (e) {
     var d = e.payload || {};
     if (d.SESSION_ID !== undefined) {
-      handleSessionMessage(d).then(function (ack) { Pebble.sendAppMessage(ack); });
+      console.log('[TR] got SESSION ' + d.SESSION_ID);
+      handleSessionMessage(d).then(function (ack) {
+        console.log('[TR] ACK ' + ack.SESSION_ACK_ID);
+        Pebble.sendAppMessage(ack);
+      });
     } else if (d.SESSION_RETRACT_ID !== undefined) {
+      console.log('[TR] got RETRACT ' + d.SESSION_RETRACT_ID);
       handleRetractMessage(d).then(function (ack) { Pebble.sendAppMessage(ack); });
     }
   });

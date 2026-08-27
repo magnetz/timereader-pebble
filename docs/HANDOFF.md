@@ -42,16 +42,52 @@ and committed.**
 | 13 | `ui_summary.c/.h` — summary, retract, crash-recovery persistence | done |
 | 14 | Polish (animated back-nav) + `docs/on-device-checklist.md` | done |
 
-All 88 host tests pass: `cd tests/c && ./run.sh`. `pebble build` produces
-`watchapp/build/watchapp.pbw`.
-
 **Design change during SP1 (user rule):** a new session prefills the
 start page as `current_page + 1` (started book) or `1` (unread book);
 pages read in a session are counted inclusively (`end - start + 1`). See
 the Global Constraints note in the plan. Timer/summary show `h:mm:ss`
 once a session passes an hour (`session_format_duration`).
 
-**Next: SP2** (companion + Bluetooth sync) — spec only, not started.
+## SP2 — companion + Bluetooth sync (done)
+
+Plan: `docs/superpowers/plans/2026-08-27-sp2-companion-bt-sync.md`.
+Branch `sp2-companion`. **Tasks 1–15 done and committed** (Task 16,
+distribution docs, is the only remaining plan item).
+
+| Area | Deliverable |
+|---|---|
+| `src/pkjs/datastore.js` | async localStorage seam (`tr_books` / `tr_sessions`), idempotent append, cascade delete |
+| `src/pkjs/library.js` | Σpages/Σduration rate, global estimate + flag, `colorState`, `digestBook`, `computeSnapshot` |
+| `src/pkjs/index.js` | `showConfiguration`/`webviewclosed` diff, `sendSnapshot` (one msg at a time), `SESSION`/`SESSION_RETRACT` handlers |
+| `config-page/index.html` | stateless hash-in / `pebblejs://close`-out page: books, favourites, reorder, sessions tab, HTML escaping |
+| `src/c/store_core.c` + `store.c` | fixed-width record packing, one persist key per book/queue-entry, atomic shadow→cache commit, session queue |
+| `src/c/sync_core.c` | pure snapshot/queue/ACK/retract logic (store + transport vtables) |
+| `src/c/sync.c` | AppMessage adapter wiring `sync_core` to `app_message` + `store.c` |
+| wiring | `seed.c` now serves the cache; `FX_SAVE_SESSION` enqueues; `main.c` re-snapshots on commit, drains the queue each minute |
+
+Tests: `cd tests/c && ./run.sh` (128 C: digit_entry 16, session 19,
+state_machine 53, store_core 23, sync_core 17) and `cd tests/js && ./run.sh`
+(29: datastore, library, config page (jsdom), index bridge). jsdom is
+installed locally with `npm i --no-save jsdom@25` in `tests/js/`.
+
+End-to-end on the emulator (snapshot in, session out + ACK, retract) is
+recorded in `docs/sp2-e2e-notes.md`.
+
+**Gotchas found in SP2:**
+- `message_keys.auto.h` is only regenerated on a **clean** build — run
+  `pebble clean && pebble build` after changing `package.json` messageKeys
+  or `MESSAGE_KEY_*` won't resolve.
+- The Pebble app stack is tiny (~2 KB): never put a
+  `QueuedSession[STORE_MAX_QUEUE]` (2 KB) on the stack. `store_queue_remove`
+  uses a `static` scratch buffer; `sync_core` only ever peeks the head.
+- `enableMultiJS: true` in `package.json` is required for
+  `require('./library')` in pkjs.
+- `CONFIG_BASE_URL` in `index.js` is `https://magnetz.github.io/timereader-pebble/`;
+  GitHub Pages deploy is `.github/workflows/pages.yml` (serves `config-page/`).
+
+**Remaining:** Task 16 (distribution.md + README distribution pointer),
+then publish — Rebble store + `.pbw` on GitHub Releases + Pages enablement
+on the `magnetz/timereader-pebble` repo.
 
 ## How to work
 

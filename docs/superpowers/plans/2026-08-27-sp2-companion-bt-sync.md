@@ -1943,19 +1943,19 @@ Add two books and one session in the page, hit "Salva". Verify from `pebble logs
 
 Start a session on the watch, save an end page, land on the summary. From `pebble logs` confirm `sync_core_enqueue` → `SESSION` sent → pkjs `handleSessionMessage` → `SESSION_ACK` → queue emptied. Reopen the config page: the new session is listed under its book, and the book's current page / colour updated. Screenshot.
 
-- [ ] **Step 3: Retract round-trip**
+- [x] **Step 3: Retract round-trip**
 
 Repeat, but press Up on the summary. Confirm: if the `SESSION_ACK` had already arrived, `SESSION_RETRACT` is sent and the session disappears from the config page; if not, the queue entry is just dropped and nothing is sent. Screenshot the paused timer it lands on.
 
-- [ ] **Step 4: Interrupted-snapshot check**
+- [x] **Step 4: Interrupted-snapshot check**
 
 Trigger a snapshot, then `pebble kill` mid-stream (or toggle `pebble emu-bt-connection --state disconnected`). Relaunch: the previous book list is still there (shadow discarded, cache intact).
 
-- [ ] **Step 5: Update the checklist + handoff**
+- [x] **Step 5: Update the checklist + handoff**
 
 Append an "SP2" section to `docs/on-device-checklist.md` (config page adds/edits/deletes reach the watch on next open; a completed session appears in the config page; retract from summary removes it; queue survives a BT drop and drains on reconnect; interrupted snapshot keeps the old cache). Update `docs/HANDOFF.md`: SP2 done, branch `sp2-companion`, all tests green, note the `CONFIG_BASE_URL` value (or the pending `TODO(user)`), and the remaining SP2-d publishing steps (Rebble store + `.pbw` on GitHub Releases + sideload instructions) as the only open items.
 
-- [ ] **Step 6: Full-suite run**
+- [x] **Step 6: Full-suite run**
 
 ```bash
 cd tests/c && ./run.sh          # SP1 + store_core + sync_core all green
@@ -1963,7 +1963,7 @@ cd ../js && ./run.sh            # datastore + library + config page + index brid
 cd ../../watchapp && pebble build
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add docs/
