@@ -1,7 +1,7 @@
 # Distribution
 
 Pebble Time is **Bluetooth-only** — there is no USB install. Everything
-goes through the Pebble / Rebble app on the phone.
+goes through the official Pebble app on the phone.
 
 ## Build the release bundle
 
@@ -26,9 +26,9 @@ everything.
    `pebble install --phone <phone-ip>` (needs Developer Connection enabled
    in the Pebble app).
 
-## Rebble App Store (public, free)
+## rePebble App Store (public, free)
 
-1. Sign in at <https://apps.rebble.io/> with the developer account.
+1. Sign in at <https://appstore-api.repebble.com/dashboard> with your rePebble account (or just use `pebble login` + `pebble publish`).
 2. Create a new **watchapp** listing, UUID
    `bfdd20e5-1c38-4c97-85ee-486042b64b96`, category "Tools" / "Utilities".
 3. Upload `watchapp.pbw`, add screenshots (use `pebble screenshot` from
