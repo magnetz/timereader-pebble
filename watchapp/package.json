@@ -1,7 +1,7 @@
 {
   "name": "timereader",
   "author": "Luca Magnetti",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {},
