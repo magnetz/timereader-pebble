@@ -22,23 +22,36 @@ reference for the port.
 ## Progress so far
 
 Executing the SP1 plan with the `superpowers:executing-plans` workflow
-(TDD, bite-sized steps, one commit per task). **Tasks 1–5 are done and
-committed:**
+(TDD, bite-sized steps, one commit per task). **All tasks 1–14 are done
+and committed.**
 
 | Task | Deliverable | State |
 |---|---|---|
-| 1 | Toolchain + `watchapp/` scaffold, builds & runs default app in emulator | done |
-| 2 | `watchapp/src/c/model.h` + host C test harness (`tests/c/test.h`, `run.sh`) | done |
-| 3 | `digit_entry.c/.h` — 4-digit entry with back-a-digit | done, 16 tests |
-| 4 | `session.c/.h` — live timing + per-book display stats | done, 12 tests |
-| 5 | `state_machine.c/.h` — full 4-button state machine | done, 52 tests |
+| 1 | Toolchain + `watchapp/` scaffold | done |
+| 2 | `model.h` + host C test harness | done |
+| 3 | `digit_entry.c/.h` — 4-digit entry | done, 16 tests |
+| 4 | `session.c/.h` — live timing + display stats + duration formatter | done, 19 tests |
+| 5 | `state_machine.c/.h` — 4-button state machine | done, 53 tests |
+| 6 | `seed.c/.h` + `store.c/.h` (persistent storage wrappers) | done |
+| 7 | App shell — `main.c`, `ui_common.c/.h`, tick timer, central dispatch | done |
+| 8 | `ui_list.c/.h` — book list (MenuLayer) + no-books window | done |
+| 9 | `ui_detail.c/.h` — 3 info pages + page dots | done |
+| 10 | `ui_digit.c/.h` — animated 4-digit entry + error flash | done |
+| 11 | `ui_timer.c/.h` — StatusBar + ActionBar + PDC play/pause icons | done |
+| 12 | `ui_endmenu.c/.h` — ActionMenu + exit-without-saving confirm modal | done |
+| 13 | `ui_summary.c/.h` — summary, retract, crash-recovery persistence | done |
+| 14 | Polish (animated back-nav) + `docs/on-device-checklist.md` | done |
 
-All 80 host tests pass: `cd tests/c && ./run.sh`.
+All 88 host tests pass: `cd tests/c && ./run.sh`. `pebble build` produces
+`watchapp/build/watchapp.pbw`.
 
-**Next: Task 6.** The remaining tasks (6–14) are seed data, persistent
-storage, and every UI window — best done in the interactive VS Code
-session where you can watch the emulator. Start at Task 6 in the plan
-and follow it step by step.
+**Design change during SP1 (user rule):** a new session prefills the
+start page as `current_page + 1` (started book) or `1` (unread book);
+pages read in a session are counted inclusively (`end - start + 1`). See
+the Global Constraints note in the plan. Timer/summary show `h:mm:ss`
+once a session passes an hour (`session_format_duration`).
+
+**Next: SP2** (companion + Bluetooth sync) — spec only, not started.
 
 ## How to work
 

@@ -1131,15 +1131,15 @@ git commit -m "feat: session summary window, retract, and crash-recovery persist
 - Modify: any `ui_*.c` for spacing/colour/animation fixes found during review
 - Create: `docs/on-device-checklist.md`
 
-- [ ] **Step 1: Review against the UI guidelines**
+- [x] **Step 1: Review against the UI guidelines**
 
 Walk the spec's "Aderenza alle linee guida UI ufficiali Pebble" list. For each screen confirm: system window transitions (not overridden), `StatusBarLayer` present where required, fonts are the three approved keys, Back is always one-step-back, colours match the scheme, animations use system curves. Fix deviations; commit each fix separately (`fix: ...`).
 
-- [ ] **Step 2: Write `docs/on-device-checklist.md`**
+- [x] **Step 2: Write `docs/on-device-checklist.md`**
 
 Port and trim the relevant lines from `../m5/timereader/README.md`'s on-device checklist: book list navigation with wraparound and state colours; detail pages don't overlap; completed book can't start a session; digit wrap 9→0 and back-a-digit; end-session menu three ways; end page below start errors; valid end page → summary → detail; kill power mid-RUNNING and relaunch lands in PAUSED with elapsed not creeping; retract from summary returns to paused timer.
 
-- [ ] **Step 3: Final full-suite run + build**
+- [x] **Step 3: Final full-suite run + build**
 
 Run:
 ```bash
@@ -1148,7 +1148,7 @@ cd ../../watchapp && pebble build
 ```
 Expected: all C tests pass; `Created build/timereader.pbw`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A

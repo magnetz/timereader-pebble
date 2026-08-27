@@ -100,8 +100,12 @@ static int desired_stack(Window **out) {
 }
 
 void ui_route_to_state(void) {
-  APP_LOG(APP_LOG_LEVEL_INFO, "route -> state %d (book %d)",
-          (int)g_ctx.state, g_ctx.book_index);
+  static int s_logged = -1;
+  if ((int)g_ctx.state != s_logged) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "route -> state %d (book %d)",
+            (int)g_ctx.state, g_ctx.book_index);
+    s_logged = (int)g_ctx.state;
+  }
 
   Window *want[MAX_STACK];
   int wantn = desired_stack(want);
@@ -109,9 +113,16 @@ void ui_route_to_state(void) {
   int k = 0;
   while (k < s_depth && k < wantn && s_stack[k] == want[k]) k++;
 
-  /* Pop everything above the common prefix. */
+  /* Pure back-navigation (only popping): let the system animate the top
+     window sliding out, like every stock app. */
+  bool pure_pop = (wantn == k) && (s_depth > k);
   for (int i = s_depth - 1; i >= k; i--) {
-    window_stack_remove(s_stack[i], false);
+    bool animate = pure_pop && (i == s_depth - 1);
+    if (animate) {
+      window_stack_pop(true);
+    } else {
+      window_stack_remove(s_stack[i], false);
+    }
   }
   s_depth = k;
 
