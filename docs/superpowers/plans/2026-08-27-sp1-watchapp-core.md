@@ -894,21 +894,21 @@ git commit -m "feat: app shell with tick timer and central event dispatch"
 - Consumes: `ui_common.h`, `model.h`.
 - Produces: `Window *ui_list_window(void);` and `void ui_list_refresh(void);`
 
-- [ ] **Step 1: Implement the window**
+- [x] **Step 1: Implement the window**
 
 `MenuLayer` filling the area below the status bar. One section, `num_rows = *count` from `ui_books`. Row draw: `menu_cell_basic_draw` with the title in `ui_color_for_book_state(book.color)`; a small favourite marker (PDC star or a `★` glyph) when `book.favorite`. `select_click` callback → set `g_ctx.book_index = cell_index->row; ui_dispatch(EV_SELECT);`. Up/Down are handled by `MenuLayer` natively; on `MenuLayer` selection change, also mirror into `g_ctx.book_index` so the state machine and menu agree. `ContentIndicator` is provided by `MenuLayer` automatically.
 When `*count == 0`, do not use this window — `ui_route_to_state` shows a plain `TextLayer` "Nessun libro — aggiungi dal telefono" window instead.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_LIST_BOOKS` → ensure the list window is the top of the stack (push if not); `APP_NO_BOOKS` → the no-books window.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 Run: `pebble build && pebble install --emulator basalt`
 Verify by screenshot (`pebble screenshot`): two rows, "La Storia Infinita" green-ish (started) with a star, "Il Nome della Rosa" white. Up/Down moves the highlight. Select transitions (logs show `APP_BOOK_DETAIL`).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_list.* watchapp/src/c/ui_common.c
