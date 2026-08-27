@@ -1419,11 +1419,11 @@ The decision core, no `<pebble.h>`. It talks to the outside world through two vt
   - `retract(id)` → if `id` is in the queue: `store.queue_remove(id)`; if `id == inflight_id` also clear `awaiting_ack`. If `id` is **not** in the queue (already ACKed and gone): `tx.send_retract(id)`, set `pending_retract`.
   - `on_retract_ack(id)` → clear `pending_retract` if it matches.
 
-- [ ] **Step 1: Write `tests/c/fake_sync_env.h`**
+- [x] **Step 1: Write `tests/c/fake_sync_env.h`**
 
 An in-memory `FakeEnv` with: a `DigestBook cache[STORE_MAX_BOOKS]` + `shadow[...]` + counts, a `QueuedSession queue[STORE_MAX_QUEUE]` + count, `sent_sessions` / `sent_retracts` logs, and `SyncStore` / `SyncTransport` instances whose function pointers manipulate the `FakeEnv`. `send_session` / `send_retract` push to the log and return `true` unless `env->tx_offline` is set.
 
-- [ ] **Step 2: Write the failing tests** — `tests/c/test_sync_core.c`
+- [x] **Step 2: Write the failing tests** — `tests/c/test_sync_core.c`
 
 ```c
 #include "sync_core.h"
@@ -1529,13 +1529,13 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 3: Run to verify it fails** — `cd tests/c && ./run.sh`.
+- [x] **Step 3: Run to verify it fails** — `cd tests/c && ./run.sh`.
 
-- [ ] **Step 4: Write `sync_core.c`** following the behaviour contract above. Keep every branch small; no allocation; `strncpy` into the fixed `inflight_id` / `pending_retract` buffers.
+- [x] **Step 4: Write `sync_core.c`** following the behaviour contract above. Keep every branch small; no allocation; `strncpy` into the fixed `inflight_id` / `pending_retract` buffers.
 
-- [ ] **Step 5: Run to verify it passes** — `cd tests/c && ./run.sh`. Confirm the full C suite (SP1 + SP2) is green.
+- [x] **Step 5: Run to verify it passes** — `cd tests/c && ./run.sh`. Confirm the full C suite (SP1 + SP2) is green.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add watchapp/src/c/sync_core.* tests/c/test_sync_core.c tests/c/fake_sync_env.h
