@@ -1,5 +1,6 @@
 #include "ui_digit.h"
 #include "ui_common.h"
+#include "strings.h"
 
 static Window *s_window;
 static Layer *s_content;
@@ -20,8 +21,8 @@ static void content_update(Layer *layer, GContext *ctx) {
   GRect b = layer_get_bounds(layer);
   graphics_context_set_text_color(ctx, GColorWhite);
 
-  const char *title = (g_ctx.state == APP_ENTER_START_PAGE)
-                          ? "Pagina iniziale" : "Pagina finale";
+  const char *title = S(g_ctx.state == APP_ENTER_START_PAGE
+                            ? STR_START_PAGE : STR_END_PAGE);
   graphics_draw_text(ctx, title, fonts_get_system_font(FONT_KEY_GOTHIC_18),
                      GRect(4, 0, b.size.w - 8, 22),
                      GTextOverflowModeFill, GTextAlignmentCenter, NULL);
@@ -36,7 +37,7 @@ static void content_update(Layer *layer, GContext *ctx) {
 
   if (s_error) {
     graphics_context_set_text_color(ctx, GColorRed);
-    graphics_draw_text(ctx, "Pagina finale < iniziale",
+    graphics_draw_text(ctx, S(STR_END_LT_START),
                        fonts_get_system_font(FONT_KEY_GOTHIC_18),
                        GRect(2, 108, b.size.w - 4, 44),
                        GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);

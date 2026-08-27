@@ -1,5 +1,6 @@
 #include "ui_detail.h"
 #include "ui_common.h"
+#include "strings.h"
 #include "session.h"
 
 static Window *s_window;
@@ -47,33 +48,33 @@ static void content_update(Layer *layer, GContext *ctx) {
                      GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
 
   if (g_ctx.detail_page == 0) {
-    snprintf(line, sizeof(line), "Pag. %d", bk->current_page);
+    snprintf(line, sizeof(line), S(STR_PAGE_FMT), bk->current_page);
     graphics_draw_text(ctx, line, f_big, GRect(4, 34, b.size.w - 8, 34),
                        GTextOverflowModeFill, GTextAlignmentCenter, NULL);
-    snprintf(line, sizeof(line), "%d.%d pag/ora%s",
+    snprintf(line, sizeof(line), S(STR_PPH_FMT),
              bk->pph_x100 / 100, (bk->pph_x100 % 100) / 10,
-             bk->pph_is_estimate ? " (stima)" : "");
+             bk->pph_is_estimate ? S(STR_EST) : "");
     graphics_draw_text(ctx, line, f_label, GRect(4, 74, b.size.w - 8, 24),
                        GTextOverflowModeFill, GTextAlignmentCenter, NULL);
   } else if (g_ctx.detail_page == 1) {
-    snprintf(line, sizeof(line), "Tempo tot %d.%02d h",
+    snprintf(line, sizeof(line), S(STR_TIME_TOTAL_FMT),
              bk->hours_x100 / 100, bk->hours_x100 % 100);
     graphics_draw_text(ctx, line, f_label, GRect(4, 40, b.size.w - 8, 24),
                        GTextOverflowModeFill, GTextAlignmentCenter, NULL);
     int left = pages_left(bk->total_pages, bk->current_page);
     int eta = eta_minutes(left, bk->pph_x100);
     if (eta >= 60) {
-      snprintf(line, sizeof(line), "Resta %dp ~%d h%s", left, eta / 60,
-               bk->pph_is_estimate ? " (stima)" : "");
+      snprintf(line, sizeof(line), S(STR_LEFT_H_FMT), left, eta / 60,
+               bk->pph_is_estimate ? S(STR_EST) : "");
     } else {
-      snprintf(line, sizeof(line), "Resta %dp ~%d min%s", left, eta,
-               bk->pph_is_estimate ? " (stima)" : "");
+      snprintf(line, sizeof(line), S(STR_LEFT_MIN_FMT), left, eta,
+               bk->pph_is_estimate ? S(STR_EST) : "");
     }
     graphics_draw_text(ctx, line, f_label, GRect(4, 68, b.size.w - 8, 44),
                        GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
   } else {
     if (bk->total_pages == 0) {
-      graphics_draw_text(ctx, "Pagine totali\nsconosciute", f_label,
+      graphics_draw_text(ctx, S(STR_PAGES_UNKNOWN), f_label,
                          GRect(4, 44, b.size.w - 8, 48),
                          GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
     } else {
