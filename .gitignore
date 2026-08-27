@@ -2,3 +2,7 @@
 build/
 node_modules/
 *.pbw
+watchapp/build/
+watchapp/.pebble-cache/
+.envrc
+watchapp/.lock-waf*

@@ -22,6 +22,7 @@
 - Session recovery rule (verbatim from spec): a session persisted as `RUNNING` **always** resumes as `PAUSED`, never auto-running; displayed elapsed time must not advance before an explicit resume.
 - Reading-rate rule (verbatim from original spec): average pages/hour is `Σ pages / Σ duration`, **never** the mean of per-session rates.
 - Page validation: `end_page >= start_page`; a lower value shows a brief error and does not complete the session.
+- **Start-page prefill (user rule, added 2026-08-27):** a new session prefills the start page as `current_page + 1` for a started book (you resume on the page *after* the last one read), or `1` for a never-started book. Pages read in a session are **inclusive**: `end_page - start_page + 1`. So reading 10→20 leaves the book at 20 and the next session prefills 21.
 - All commits use Conventional Commits (`feat:`, `test:`, `chore:`, `fix:`, `docs:`).
 
 ---
@@ -76,7 +77,7 @@ timereader-pebble/
 **Interfaces:**
 - Produces: a `watchapp/` that `pebble build` compiles and `pebble install --emulator basalt` runs, showing the default "Hello, World" text.
 
-- [ ] **Step 1: Install `uv`**
+- [x] **Step 1: Install `uv`**
 
 Run:
 ```bash
@@ -86,7 +87,7 @@ uv --version
 ```
 Expected: prints a `uv` version. If `curl` is blocked, ask the user to run it in a `!` shell.
 
-- [ ] **Step 2: Install `pebble-tool` + SDK**
+- [x] **Step 2: Install `pebble-tool` + SDK**
 
 Run:
 ```bash
@@ -96,7 +97,7 @@ pebble sdk list
 ```
 Expected: `pebble sdk list` shows an installed SDK marked active. If `pebble sdk install` needs a Rebble login, stop and ask the user to run `pebble login` (or the printed auth command) in a `!` shell, then retry.
 
-- [ ] **Step 3: Scaffold the project**
+- [x] **Step 3: Scaffold the project**
 
 Run:
 ```bash
@@ -105,7 +106,7 @@ pebble new-project --c watchapp
 ```
 Expected: `watchapp/` created with `src/c/watchapp.c`, `package.json`, `wscript`.
 
-- [ ] **Step 4: Pin `package.json` to the spec**
+- [x] **Step 4: Pin `package.json` to the spec**
 
 Set in `watchapp/package.json`:
 ```json
@@ -128,7 +129,7 @@ Set in `watchapp/package.json`:
 }
 ```
 
-- [ ] **Step 5: Rename entry file, build, run**
+- [x] **Step 5: Rename entry file, build, run**
 
 Run:
 ```bash
@@ -139,7 +140,7 @@ pebble install --emulator basalt
 ```
 Expected: `pebble build` ends `Created build/timereader.pbw`; the emulator opens showing the default app text.
 
-- [ ] **Step 6: Extend `.gitignore` and write `README.md`**
+- [x] **Step 6: Extend `.gitignore` and write `README.md`**
 
 Append to `.gitignore`:
 ```
@@ -149,7 +150,7 @@ watchapp/.pebble-cache/
 ```
 Create `README.md` with: one-paragraph project description, the two sub-projects, and a "Dev setup" block containing the Step 1–2 commands plus `cd watchapp && pebble build && pebble install --emulator basalt` and `cd tests/c && ./run.sh`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 cd /Users/lucamagnetti/app/timereader-pebble
@@ -203,11 +204,11 @@ git commit -m "chore: scaffold basalt watchapp project"
   - `test.h` macros: `CHECK(cond, msg)`, `CHECK_EQ_INT(actual, expected, msg)`, `CHECK_EQ_STR(actual, expected, msg)`, and `TEST_MAIN()` expanding to a `main` that runs every registered `void test_*(void)` and prints `N passed / M failed`, exiting non-zero on any failure.
   - `run.sh`: `cc -std=c11 -Wall -Wextra -I../../watchapp/src/c -o /tmp/tr_tests test_*.c && /tmp/tr_tests`.
 
-- [ ] **Step 1: Write `model.h`**
+- [x] **Step 1: Write `model.h`**
 
 Exactly the types in the Interfaces block above, wrapped in an include guard. No functions.
 
-- [ ] **Step 2: Write `test.h`**
+- [x] **Step 2: Write `test.h`**
 
 A single-header harness. Registration via a static array populated by a `REGISTER_TEST(fn)` macro using a constructor attribute, or simpler: an explicit `RUN(test_fn)` list inside `TEST_MAIN`. Use the explicit-list form:
 ```c
@@ -225,7 +226,7 @@ extern int tests_run, tests_failed;
 #define TEST_END() printf("%d passed / %d failed\n", tests_run - tests_failed, tests_failed); return tests_failed ? 1 : 0; }
 ```
 
-- [ ] **Step 3: Write `run.sh`**
+- [x] **Step 3: Write `run.sh`**
 
 ```bash
 #!/usr/bin/env bash
@@ -236,7 +237,7 @@ cc -std=c11 -Wall -Wextra -I../../watchapp/src/c -o /tmp/tr_tests test_*.c
 ```
 `chmod +x run.sh`.
 
-- [ ] **Step 4: Smoke test the harness**
+- [x] **Step 4: Smoke test the harness**
 
 Create a temporary `tests/c/test_smoke.c`:
 ```c
@@ -248,7 +249,7 @@ TEST_END()
 Run: `./run.sh`
 Expected: `1 passed / 0 failed`, exit 0. Then `rm test_smoke.c`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/model.h tests/c/
@@ -278,7 +279,7 @@ Port of `../m5/timereader/firmware/app/digit_entry.py`. A 4-digit buffer with an
   bool digit_entry_back(DigitEntry *e);                   /* retreat cursor; returns true if cursor was already 0 (caller should cancel) */
   ```
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "digit_entry.h"
@@ -320,12 +321,12 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `cd tests/c && ./run.sh`
 Expected: compile error (`digit_entry.h` missing).
 
-- [ ] **Step 3: Write `digit_entry.h` and `digit_entry.c`**
+- [x] **Step 3: Write `digit_entry.h` and `digit_entry.c`**
 
 Header: include guard, `#include <stdbool.h>`, the struct and six prototypes from Interfaces.
 Implementation:
@@ -358,12 +359,12 @@ bool digit_entry_back(DigitEntry *e) {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/digit_entry.* tests/c/test_digit_entry.c
@@ -403,7 +404,7 @@ Port of `../m5/timereader/firmware/app/session.py` and `completion_estimate.py`.
   int eta_minutes(int pages_left, int pph_x100);                        /* 0 if pph_x100 == 0 */
   ```
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "session.h"
@@ -451,12 +452,12 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./run.sh`
 Expected: compile error (`session.h` missing).
 
-- [ ] **Step 3: Write `session.h` and `session.c`**
+- [x] **Step 3: Write `session.h` and `session.c`**
 
 ```c
 #include "session.h"
@@ -497,12 +498,12 @@ int eta_minutes(int pl, int pph_x100) {
 }
 ```
 
-- [ ] **Step 4: Run to verify it passes**
+- [x] **Step 4: Run to verify it passes**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/session.* tests/c/test_session.c
@@ -552,7 +553,7 @@ Port of `../m5/timereader/firmware/app/state_machine.py`, adapted to 4 buttons a
   ```
   `sm_handle` returns the single side effect the caller must perform (persist, save a session row, etc.). When `FX_SAVE_SESSION` / `FX_RETRACT_SESSION` fire, the caller reads `c->entry`, `c->live`, `c->start_page_for_session`, `c->book_index` to build the row.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
 #include "state_machine.h"
@@ -706,16 +707,16 @@ TEST_BEGIN()
 TEST_END()
 ```
 
-- [ ] **Step 2: Run to verify it fails**
+- [x] **Step 2: Run to verify it fails**
 
 Run: `./run.sh`
 Expected: compile error (`state_machine.h` missing).
 
-- [ ] **Step 3: Write `state_machine.h`**
+- [x] **Step 3: Write `state_machine.h`**
 
 Include guard; `#include "model.h"`, `"digit_entry.h"`, `"session.h"`; the `SideEffect` enum, `SmContext` struct, and four prototypes exactly as in Interfaces.
 
-- [ ] **Step 4: Write `state_machine.c` — list + detail**
+- [x] **Step 4: Write `state_machine.c` — list + detail**
 
 Implement `sm_init` (sets `APP_NO_BOOKS` when `book_count == 0`, else `APP_LIST_BOOKS`, `book_index = 0`, `detail_page = 0`), and the `APP_LIST_BOOKS` / `APP_BOOK_DETAIL` branches of `sm_handle`:
 - `APP_LIST_BOOKS`: `EV_UP`/`EV_DOWN` move `book_index` with wrap; `EV_SELECT` → `APP_BOOK_DETAIL`, `detail_page = 0`; `EV_BACK` → no-op (system pops the app).
@@ -724,7 +725,7 @@ Implement `sm_init` (sets `APP_NO_BOOKS` when `book_count == 0`, else `APP_LIST_
 
 Run `./run.sh` — the list/detail/completed-book tests pass, later ones still fail.
 
-- [ ] **Step 5: Write `sm_handle` — digit entry (start + end)**
+- [x] **Step 5: Write `sm_handle` — digit entry (start + end)**
 
 Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, int now)`:
 - `EV_UP` → `digit_entry_up`; `EV_DOWN` → `digit_entry_down`.
@@ -735,7 +736,7 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
   - start: `state = APP_BOOK_DETAIL`.
   - end: `state = c->state_before_end_page` (RUNNING or PAUSED); do **not** touch `c->live`.
 
-- [ ] **Step 6: Write `sm_handle` — running/paused + end-session menu**
+- [x] **Step 6: Write `sm_handle` — running/paused + end-session menu**
 
 - `APP_RUNNING`: `EV_SELECT` → `live_session_pause(&c->live, now)`, `state = APP_PAUSED`, return `FX_PERSIST_STATE`. `EV_BACK` → `state = APP_END_SESSION_MENU`, `end_menu_index = 0`, `end_menu_confirming = false`; record `c->state_before_end_page = APP_RUNNING`.
 - `APP_PAUSED`: `EV_SELECT` → `live_session_resume`, `state = APP_RUNNING`, `FX_PERSIST_STATE`. `EV_BACK` → open menu, `state_before_end_page = APP_PAUSED`.
@@ -746,7 +747,7 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
     - index 1 ("Esci senza salvare"): `end_menu_confirming = true`.
     - index 2 ("Annulla"): `state = c->state_before_end_page`.
 
-- [ ] **Step 7: Write `sm_handle` — summary + `sm_restore`**
+- [x] **Step 7: Write `sm_handle` — summary + `sm_restore`**
 
 - `APP_SESSION_SUMMARY`: `EV_SELECT` or `EV_BACK` → `state = APP_BOOK_DETAIL`, return `FX_NONE`. `EV_UP` or `EV_BACK_LONG` → `live_session_pause(&c->live, now)` is wrong here (elapsed already frozen at save); instead reconstruct: `c->live.accumulated_seconds = c->last_session_seconds; c->live.segment_start = -1;` then `state = APP_PAUSED`, return `FX_RETRACT_SESSION`.
 - `sm_restore`: copy `sm_init` setup, then:
@@ -754,12 +755,12 @@ Shared helper `handle_digit(SmContext*, Event, bool is_end, const DigestBook*, i
   - `APP_ENTER_END_PAGE` persisted → `state = APP_PAUSED` as well (safest: force an explicit resume), same live reconstruction.
   - anything else → behave like `sm_init`.
 
-- [ ] **Step 8: Run to verify all pass**
+- [x] **Step 8: Run to verify all pass**
 
 Run: `./run.sh`
 Expected: `N passed / 0 failed`.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add watchapp/src/c/state_machine.* tests/c/test_state_machine.c
@@ -792,7 +793,7 @@ git commit -m "feat: 4-button reading-timer state machine with end-session menu 
   int  store_load_selected_book(void);            /* 0 if unset */
   ```
 
-- [ ] **Step 1: Write `seed.c` / `seed.h`**
+- [x] **Step 1: Write `seed.c` / `seed.h`**
 
 ```c
 static const DigestBook BOOKS[] = {
@@ -804,16 +805,16 @@ static const DigestBook BOOKS[] = {
 const DigestBook *seed_books(int *count_out) { *count_out = 2; return BOOKS; }
 ```
 
-- [ ] **Step 2: Write `store.c` / `store.h`**
+- [x] **Step 2: Write `store.c` / `store.h`**
 
 Use `persist_write_data`/`persist_read_data` with a packed struct for the session key; `persist_write_int`/`persist_read_int` for the selected-book index. `store_load_session` sets `.present = persist_exists(STORE_KEY_CUR_SESSION)`. Guard every read with `persist_exists`.
 
-- [ ] **Step 3: Build check**
+- [x] **Step 3: Build check**
 
 Run: `cd watchapp && pebble build`
 Expected: compiles (files are referenced once `main.c` includes them in Task 7; for now add them to `wscript`'s source glob if it is not automatic — the default `pebble` wscript globs `src/c/**/*.c`, so no change needed). If `pebble build` reports "unused", that is fine; confirm no errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/seed.* watchapp/src/c/store.*
@@ -842,11 +843,11 @@ git commit -m "feat: seed book data and persistent-storage wrappers"
   ```
   `ui_dispatch` is the single choke point: every window's click handler calls `ui_dispatch(EV_*)`.
 
-- [ ] **Step 1: Write `ui_common.c` skeleton**
+- [x] **Step 1: Write `ui_common.c` skeleton**
 
 `g_ctx`, `ui_books` (returns `seed_books`), `ui_color_for_book_state`, `ui_setup_status_bar` (create `StatusBarLayer`, `status_bar_layer_set_colors` to a fixed scheme, add to root). `ui_route_to_state` and `ui_dispatch` are stubs that call `sm_handle` and `APP_LOG` the new state for now.
 
-- [ ] **Step 2: Rewrite `main.c`**
+- [x] **Step 2: Rewrite `main.c`**
 
 ```c
 #include <pebble.h>
@@ -870,12 +871,12 @@ static void deinit(void) { }
 int main(void) { init(); app_event_loop(); deinit(); }
 ```
 
-- [ ] **Step 3: Build + emulator smoke check**
+- [x] **Step 3: Build + emulator smoke check**
 
 Run: `cd watchapp && pebble build && pebble install --emulator basalt && pebble logs`
 Expected: build succeeds; logs show the initial state (`APP_LIST_BOOKS`). No crash.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/main.c watchapp/src/c/ui_common.*
@@ -894,21 +895,21 @@ git commit -m "feat: app shell with tick timer and central event dispatch"
 - Consumes: `ui_common.h`, `model.h`.
 - Produces: `Window *ui_list_window(void);` and `void ui_list_refresh(void);`
 
-- [ ] **Step 1: Implement the window**
+- [x] **Step 1: Implement the window**
 
 `MenuLayer` filling the area below the status bar. One section, `num_rows = *count` from `ui_books`. Row draw: `menu_cell_basic_draw` with the title in `ui_color_for_book_state(book.color)`; a small favourite marker (PDC star or a `★` glyph) when `book.favorite`. `select_click` callback → set `g_ctx.book_index = cell_index->row; ui_dispatch(EV_SELECT);`. Up/Down are handled by `MenuLayer` natively; on `MenuLayer` selection change, also mirror into `g_ctx.book_index` so the state machine and menu agree. `ContentIndicator` is provided by `MenuLayer` automatically.
 When `*count == 0`, do not use this window — `ui_route_to_state` shows a plain `TextLayer` "Nessun libro — aggiungi dal telefono" window instead.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_LIST_BOOKS` → ensure the list window is the top of the stack (push if not); `APP_NO_BOOKS` → the no-books window.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 Run: `pebble build && pebble install --emulator basalt`
 Verify by screenshot (`pebble screenshot`): two rows, "La Storia Infinita" green-ish (started) with a star, "Il Nome della Rosa" white. Up/Down moves the highlight. Select transitions (logs show `APP_BOOK_DETAIL`).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_list.* watchapp/src/c/ui_common.c
@@ -927,7 +928,7 @@ git commit -m "feat: book list window with native MenuLayer and state colours"
 - Consumes: `ui_common.h`, `session.h`.
 - Produces: `Window *ui_detail_window(void);`, `void ui_detail_refresh(void);`
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 One window, `StatusBarLayer` on top, a custom `Layer` update proc drawing the current `g_ctx.detail_page`:
 - Page 0: title (`GOTHIC_18`), current page (big `GOTHIC_28_BOLD`), "Pag/ora" value with "(stima)" suffix when `book.pph_is_estimate`.
@@ -936,15 +937,15 @@ One window, `StatusBarLayer` on top, a custom `Layer` update proc drawing the cu
 A tiny page-dots indicator bottom-centre (three dots, active filled) — draw manually, this matches the system paging idiom.
 `SELECT` → `ui_dispatch(EV_SELECT)`; `BACK` → `ui_dispatch(EV_BACK)`; `UP`/`DOWN` → `ui_dispatch(EV_UP/EV_DOWN)` then `ui_detail_refresh()`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_BOOK_DETAIL` → detail window on top.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 Screenshot each of the 3 pages (Down cycles). Confirm "(stima)" shows on "Il Nome della Rosa" page 0 and not on "La Storia Infinita". Back returns to the list.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_detail.* watchapp/src/c/ui_common.c
@@ -963,21 +964,21 @@ git commit -m "feat: book detail window with 3 info pages and estimate flag"
 - Consumes: `ui_common.h`, `digit_entry.h`.
 - Produces: `Window *ui_digit_window(void);`, `void ui_digit_refresh(void);`, `void ui_digit_flash_error(void);` (shows the "Pagina finale < iniziale" flash for ~1.5s; called by `ui_dispatch` on `FX_PAGE_ERROR` in Task 13)
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 `StatusBarLayer` + a custom layer drawing 4 large digits (`BITHAM_42_BOLD`) evenly spaced, the active one (`g_ctx.entry.cursor`) underlined or boxed. A title line: "Pagina iniziale" or "Pagina finale" from `g_ctx.state`. On a `FX_PAGE_ERROR` result, flash a red "Pagina finale < iniziale" message for ~1.5s (an `AppTimer` that clears a flag, then `ui_digit_refresh`).
 Cursor movement between digits animates with `PropertyAnimation` on the highlight layer's frame, `animation_set_curve(anim, AnimationCurveEaseInOut)`, `animation_set_duration(anim, 120)`.
 Clicks: `UP`→`EV_UP`, `DOWN`→`EV_DOWN`, `SELECT`→`EV_SELECT`, `BACK`→`EV_BACK` — all via `ui_dispatch`, then `ui_digit_refresh()`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_ENTER_START_PAGE` and `APP_ENTER_END_PAGE` → digit window on top (reuse the same window instance, just refresh).
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 From detail, Select opens digit entry prefilled with the current page. Up/Down change the active digit, Select advances with the sliding highlight, Back steps back, Back on digit 0 returns to detail. Enter a full start page → logs show `APP_RUNNING`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_digit.* watchapp/src/c/ui_common.c
@@ -997,25 +998,25 @@ git commit -m "feat: animated 4-digit page entry window"
 - Consumes: `ui_common.h`, `session.h`.
 - Produces: `Window *ui_timer_window(void);`, `void ui_timer_refresh(void);`
 
-- [ ] **Step 1: Add PDC resources**
+- [x] **Step 1: Add PDC resources**
 
 Create two small Pebble Draw Command images (24×24): `play.pdc` (triangle) and `pause.pdc` (two bars). Register under `resources.media` in `package.json` as `RESOURCE_ID_ICON_PLAY`, `RESOURCE_ID_ICON_PAUSE`.
 
-- [ ] **Step 2: Implement**
+- [x] **Step 2: Implement**
 
 `StatusBarLayer` on top. Centre: `mm:ss` in `BITHAM_42_BOLD` from `live_session_elapsed(&g_ctx.live, time(NULL))`. Below it: book title (`GOTHIC_18`). When `g_ctx.state == APP_PAUSED`, draw "PAUSA" under the time in `GColorChromeYellow`.
 `ActionBarLayer` on the right: middle icon = pause icon when `APP_RUNNING`, play icon when `APP_PAUSED`. `SELECT` → `ui_dispatch(EV_SELECT)` (pause/resume). `BACK` → `ui_dispatch(EV_BACK)` (opens end menu).
 The `EV_TICK` dispatch already runs every second (Task 7); `ui_timer_refresh` re-reads elapsed and marks the layer dirty. Do **not** advance time when `APP_PAUSED` (guaranteed by `live_session_elapsed` with `segment_start == -1`).
 
-- [ ] **Step 3: Wire into `ui_route_to_state`**
+- [x] **Step 3: Wire into `ui_route_to_state`**
 
 `APP_RUNNING` and `APP_PAUSED` → timer window on top.
 
-- [ ] **Step 4: Emulator check**
+- [x] **Step 4: Emulator check**
 
 Start a session; the timer counts up once per second. Select pauses (shows "PAUSA", play icon, time frozen), Select resumes. Screenshot both states. Back opens the end menu (Task 12).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/ui_timer.* watchapp/resources watchapp/package.json watchapp/src/c/ui_common.c
@@ -1034,21 +1035,21 @@ git commit -m "feat: reading timer window with action bar and pause state"
 - Consumes: `ui_common.h`.
 - Produces: `void ui_endmenu_open(void);` (opens the `ActionMenu`), `void ui_endmenu_confirm_exit(void);` (second-confirm dialog).
 
-- [ ] **Step 1: Implement**
+- [x] **Step 1: Implement**
 
 Build an `ActionMenuLevel` with three items: "Salva pagina finale", "Esci senza salvare", "Annulla". Each `action_menu_level_add_action` callback sets `g_ctx.end_menu_index` to 0/1/2 and calls `ui_dispatch(EV_SELECT)`.
 For index 1, after `ui_dispatch` sets `g_ctx.end_menu_confirming`, present a confirmation: a small modal `Window` with "Uscire senza salvare?" and an `ActionBarLayer` (check = confirm → `ui_dispatch(EV_SELECT)`; back = `ui_dispatch(EV_BACK)`), or reuse a second `ActionMenu` level. Prefer the modal window for a clear two-step feel.
 `ActionMenu` is dismissed automatically on selection / back; on plain back (no selection) call `ui_dispatch(EV_BACK)` via the `did_close` callback only if still in `APP_END_SESSION_MENU`.
 
-- [ ] **Step 2: Wire into `ui_route_to_state`**
+- [x] **Step 2: Wire into `ui_route_to_state`**
 
 `APP_END_SESSION_MENU` with `end_menu_confirming == false` → ensure `ActionMenu` is open; `== true` → the confirm modal.
 
-- [ ] **Step 3: Emulator check**
+- [x] **Step 3: Emulator check**
 
 From the timer, Back opens the ActionMenu with system styling/animation. "Annulla" and menu-back both return to the timer unchanged. "Salva pagina finale" opens end-page entry prefilled with the start page; Back on its first digit returns to the timer with elapsed intact. "Esci senza salvare" → confirm → returns to book detail; logs show `FX_DISCARD_SESSION` and `store_clear_session` ran.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add watchapp/src/c/ui_endmenu.* watchapp/src/c/ui_common.c
@@ -1067,12 +1068,12 @@ git commit -m "feat: end-session ActionMenu with exit-without-saving confirm"
 - Consumes: `ui_common.h`, `session.h`, `store.h`.
 - Produces: `Window *ui_summary_window(void);`, `void ui_summary_refresh(void);`
 
-- [ ] **Step 1: Implement the summary window**
+- [x] **Step 1: Implement the summary window**
 
 `StatusBarLayer` + a layer showing: "Sessione salvata", pages read (`g_ctx.last_session_pages`, big), duration `mm:ss` (`g_ctx.last_session_seconds`), and the recomputed pages/hour for that single session. A hint line: "Su/Indietro tieni = annulla". No timeout — stays until a click.
 `SELECT`/`BACK` → `ui_dispatch(EV_SELECT)` / `ui_dispatch(EV_BACK)`. `UP` → `ui_dispatch(EV_UP)`. Long back → `ui_dispatch(EV_BACK_LONG)` (register with `window_long_click_subscribe`).
 
-- [ ] **Step 2: Complete `ui_dispatch` side-effect handling**
+- [x] **Step 2: Complete `ui_dispatch` side-effect handling**
 
 ```c
 void ui_dispatch(Event ev) {
@@ -1106,16 +1107,16 @@ void ui_dispatch(Event ev) {
 ```
 Also: on every `EV_TICK` while `APP_RUNNING`, re-persist elapsed at most once per 10 s (track `last_persist_s` in `ui_common.c`) so a crash loses ≤10 s — mirrors the original's 10 s cadence.
 
-- [ ] **Step 3: Wire into `ui_route_to_state`**
+- [x] **Step 3: Wire into `ui_route_to_state`**
 
 `APP_SESSION_SUMMARY` → summary window on top (pop timer/digit/menu below it so Back-out is clean; simplest: `window_stack_pop_all(false)` then push list → detail → summary so the natural back-stack is correct).
 
-- [ ] **Step 4: Emulator check**
+- [x] **Step 4: Emulator check**
 
 Full happy path: list → detail → start page → timer (count a few seconds) → Back → "Salva pagina finale" → end page 60 → summary shows pages/duration. Press Up on the summary → logs `FX_RETRACT_SESSION`, lands on the paused timer with the same elapsed. Press Select instead → returns to book detail.
 Recovery: while `APP_RUNNING`, `pebble emu-app-config`? no — kill and relaunch: `pebble install --emulator basalt` again mid-session; app reopens on the **paused** timer at roughly the last-persisted elapsed, and the time does not tick until Select.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add watchapp/src/c/ui_summary.* watchapp/src/c/ui_common.c
@@ -1130,15 +1131,15 @@ git commit -m "feat: session summary window, retract, and crash-recovery persist
 - Modify: any `ui_*.c` for spacing/colour/animation fixes found during review
 - Create: `docs/on-device-checklist.md`
 
-- [ ] **Step 1: Review against the UI guidelines**
+- [x] **Step 1: Review against the UI guidelines**
 
 Walk the spec's "Aderenza alle linee guida UI ufficiali Pebble" list. For each screen confirm: system window transitions (not overridden), `StatusBarLayer` present where required, fonts are the three approved keys, Back is always one-step-back, colours match the scheme, animations use system curves. Fix deviations; commit each fix separately (`fix: ...`).
 
-- [ ] **Step 2: Write `docs/on-device-checklist.md`**
+- [x] **Step 2: Write `docs/on-device-checklist.md`**
 
 Port and trim the relevant lines from `../m5/timereader/README.md`'s on-device checklist: book list navigation with wraparound and state colours; detail pages don't overlap; completed book can't start a session; digit wrap 9→0 and back-a-digit; end-session menu three ways; end page below start errors; valid end page → summary → detail; kill power mid-RUNNING and relaunch lands in PAUSED with elapsed not creeping; retract from summary returns to paused timer.
 
-- [ ] **Step 3: Final full-suite run + build**
+- [x] **Step 3: Final full-suite run + build**
 
 Run:
 ```bash
@@ -1147,7 +1148,7 @@ cd ../../watchapp && pebble build
 ```
 Expected: all C tests pass; `Created build/timereader.pbw`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A
